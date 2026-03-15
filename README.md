@@ -144,4 +144,4 @@ cd && cd Mahiru-Shiina && rm -rf Sessions/Owner && npm start
 ---
 
 ### 💐 Propietario
-[![Adara]( ) 
+[![Adara]( https://github.com/shxdowlynnnjade ) 
