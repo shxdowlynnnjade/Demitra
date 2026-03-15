@@ -145,4 +145,4 @@ cd && cd Mahiru-Shiina && rm -rf Sessions/Owner && npm start
 
 ### 💐 Propietario
 
-"<img src="https://github.com/shxdowlynnnjade.png" width="120">" (https://github.com/shxdowlynnnjade)
+"<img src="https://github.com/shxdowlynnnjade.png" width="120">"
