@@ -5,7 +5,7 @@
 <img src="https://files.catbox.moe/s3gu8x.jpg" alt="Demitra" style="width: 75%; height: auto; max-width: 100px;">
 
 <p align="center"> 
-<a href="#"><img title="Demitra" src="https://img.shields.io/badge/¡Disfruta de un Bot totalmente gratuito, con múltiples funciones y de código abierto! -purple?colorA=%239b33b0&colorB=%231c007b&style=for-the-badge"></a> 
+<a href="#"><img title="Demitra" src="https://img.shields.io/badge/¡Disfruta de un Bot totalmente gratuito, con múltiples funciones! -purple?colorA=%239b33b0&colorB=%231c007b&style=for-the-badge"></a> 
 </p>
 
 ---
