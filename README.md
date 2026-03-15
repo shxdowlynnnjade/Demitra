@@ -24,13 +24,6 @@ Hola, soy Demitra, un bot de WhatsApp pensado para responder comandos y brindar 
 - Respuestas automáticas
 - Gestión de grupos
 
----
-
-## Información Importante
-
-Evita completamente usar forks, mods o versiones alteradas de Baileys.
-No utilices “baileys mods” ni variantes no oficiales.
-Siempre usa la librería principal y oficial de Baileys.
 
 ---
 
