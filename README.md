@@ -10,19 +10,16 @@
 
 ---
 
-## 🪾 Descripción 
+## 🪻 Descripción 
 
-Mahiru Shiina Bot es un bot de WhatsApp multifuncional basado en `baileys`. Este bot ofrece una variedad de características para mejorar tu experiencia en WhatsApp.
-
+Hola, soy Demitra, un bot de WhatsApp pensado para responder comandos y brindar funciones automáticas de manera rápida y sencilla dentro de la conversación.
 ---
 
 ## 🥦 Características
 
-- Comandos Gacha (Y más juegos)
-- Comandos de economia
+- Comandos Gacha
 - Respuestas automáticas
 - Gestión de grupos
-- Integración con APIs externas
 
 ---
 
