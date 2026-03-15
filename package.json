@@ -23,9 +23,9 @@
   "dependencies": {
     "@babel/parser": "latest",
     "@vitalets/google-translate-api": "^8.0.0",
-        "@whiskeysockets/baileys": "github:this-xys/baileys", 
+    "@whiskeysockets/baileys": "github:this-xys/baileys#main",
     "acrcloud": "^1.4.0",
-    "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
+    "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper#main",
     "axios": "^0.24.0",
     "cfonts": "latest",
     "cors": "^2.8.5",
