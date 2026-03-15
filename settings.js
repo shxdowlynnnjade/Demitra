@@ -2,20 +2,20 @@ import fs from 'fs';
 import { watchFile, unwatchFile } from 'fs'
 import { fileURLToPath } from 'url'
 
-global.owner = ['51901930696', '51910340144']
+global.owner = ['5493863447787', '5493863402551']
 global.botNumber = ''
 
 global.sessionName = 'Sessions/Owner'
 global.version = '^2.0 - Latest'
-global.dev = "Build With By Angelithoxyz"
+global.dev =  "With By Adara"
 global.links = {
 api: 'https://api.stellarwa.xyz',
-channel: "https://whatsapp.com/channel/0029Vaz6RTR0LKZIKwudX32x",
-github: "https://github.com/Angelithoxz/Hatsune-Miku",
+channel: "https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A",
+github: "https://github.com/shxdowlynnnjade/Demitra",
 }
 global.my = {
 ch: '120363374826926142@newsletter',
-name: '=͟͟͞𝐑𝐲𝐮𝐬𝐞𝐢 𝐂𝐥𝐮𝐛 𝐈𝐧𝐟𝐢𝐧𝐢𝐭𝐲 - 𝐎𝐟𝐢𝐜𝐢𝐚𝐥 𝐂𝐡𝐚𝐧𝐧𝐞𝐥⏤͟͟͞͞★',
+name: '䥵ۣۖؗ㦥ㅤㅤ𓈒𓈒ㅤㅤ𝖲𝖧꯭𝖷꯭𝖣꯭𝖮⵿𝖶⵿𝖫𝖸𝖭ㅤㅤ〗',
 }
 
 global.mess = {
