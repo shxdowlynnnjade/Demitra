@@ -12,7 +12,10 @@
 
 ## 🪻 Descripción 
 
-Hola, soy Demitra, un bot de WhatsApp pensado para responder comandos y brindar funciones automáticas de manera rápida y sencilla dentro de la conversación.
+Hola, soy Demitra, un bot de WhatsApp pensado para responder comandos y brindar funciones automáticas de manera rápida y sencilla dentro de la conversación... 
+
+
+
 ---
 
 ## 🥦 Características
