@@ -1,7 +1,7 @@
 {
-  "name": "EverligthWa",
+  "name": "Demitra",
   "version": "2.0",
-  "description": "WhatsApp Bot Multi Device",
+  "description": "WhatsApp Bot",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -14,7 +14,7 @@
     "bot-wa",
     "multi-device"
   ],
-  "author": "Angelithoxyz",
+  "author": "Adara",
   "license": "MIT",
   "engines": {
     "node": ">=21.7.3",
