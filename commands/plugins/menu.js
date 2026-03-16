@@ -1,6 +1,5 @@
 // commands/plugins/menu.js
 import fetch from 'node-fetch';
-import Jimp from 'jimp';
 
 export default {
   command: ['menu', 'help', 'allmenu'],
@@ -8,7 +7,7 @@ export default {
   description: 'Muestra el menú de comandos del bot',
   run: async (client, m, args, usedPrefix = '#') => {
     try {
-      const botname = global.botname || 'Zero Two';
+      const botname = global.botname || 'DEMITRA';
       const senderName = m.pushName || 'amig@';
       const comandosCargados = Array.from(global.comandos.keys()).join(',');
 
@@ -21,7 +20,7 @@ export default {
       else if (hora >= 12 && hora < 18) { saludo = 'buenas tardes'; carita = '(｡•̀ᴗ-)✧ 🌸'; }
       else { saludo = 'buenas noches'; carita = '(◕‿◕✿) 🌙'; }
 
-      // Tu menú completo
+      // Texto del menú
       const menuTexto = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 橫㈵𓂂ㅤㅤ𓐮𝖣ۣؗ𝖤ۣؗ𝖬ۣؗ𝖨ۣؗ𝖳ۣؗ𝖱ۣؗ𝖠ㅤㅤ▞ㅤㅤ𓆭𓆭₂₈₎
 ◯◯▸ㅤㅤ⎯⎯▬𝖫ؗOVEㅤㅤ🔘ㅤㅤ ▓█
@@ -110,32 +109,19 @@ export default {
 
 
 ㅤㅤㅤㅤ𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤ𝗌𝗁𝖾𝗋𝗒𝗅
-ㅤ`;
+ㅤ
+`;
 
       // URL de la imagen
       const imageUrl = 'https://files.catbox.moe/s3gu8x.jpg';
-      const response = await fetch(imageUrl);
-      const imageBuffer = await response.buffer();
 
-      // Crear thumbnail para PDF
-      const thumb = await Jimp.read(imageBuffer)
-        .then(img => img.resize(300, 150).getBufferAsync(Jimp.MIME_JPEG))
-        .catch(() => imageBuffer);
-
-      // PDF dummy (solo para icono)
-      const pdfBuffer = Buffer.from('%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF', 'utf-8');
-
-      // Enviar mensaje con imagen + PDF
+      // Enviar mensaje con imagen + canal
       await client.sendMessage(
         m.chat,
         {
-          image: { url: imageUrl },   // Imagen arriba
-          caption: menuTexto,         // Texto intacto
-          mentions: [m.sender],
-          document: pdfBuffer,        // PDF dummy
-          fileName: 'Demilove.pdf',
-          mimetype: 'application/pdf',
-          jpegThumbnail: thumb         // Miniatura del PDF
+          image: { url: imageUrl },  // Imagen visible arriba
+          caption: menuTexto,        // Texto con canal
+          mentions: [m.sender],      // Mención al usuario
         },
         { quoted: m }
       );
