@@ -40,12 +40,19 @@ export default {
 
 ꒰  👾 ꧇ㅤLe muestro mis comandos. Ordenados y afilados.
 
+
+        ࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛   ୨୧  ࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛
+https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A
+
+
 > ㅤㅤ⧼ㅤ Principalㅤ⧽ㅤ🫐❝
 .reg
 .menu/help/menú/allmenu
 .infobot/infosocket
 .status/estado
 .report/reporte/sug/suggest
+
+
 
 > ㅤㅤ⧼ㅤ Set perfil?+ㅤ⧽ㅤ🪼❝
 .profile/perfil
@@ -94,6 +101,7 @@ export default {
 .ia/chatgpt
 
 > ㅤㅤ⧼ㅤ Descargas+ㅤ⧽ㅤ🐢❝
+
 .ytsearch/search (búsqueda en youtube) 
 .play2/mp4/ytmp4/ytvideo/playvideo (videos descargados) 
 .play/mp3/ytmp3 /ytaudio/playaudio (Música audio)
@@ -113,14 +121,14 @@ export default {
           image: { url: imageUrl },   // imagen adjunta
           caption: menuTexto,         // texto del menú
           mentions: [m.sender],       // mención al usuario
-          footer: '🌸 Zero Two',       // opcional
+          footer: '🌸 DEMITRA',       // opcional
         },
         { quoted: m }
       );
 
     } catch (e) {
       console.error('Error en plugin menu.js:', e);
-      m.reply('💔 Darling, algo salió mal al generar el menú...');
+      m.reply('💔 Demi avisa,que algo salió mal al generar el menú...');
     }
   }
 };
