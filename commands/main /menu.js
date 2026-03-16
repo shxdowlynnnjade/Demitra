@@ -1,20 +1,17 @@
 import { getDevice } from '@whiskeysockets/baileys';
 import moment from 'moment-timezone';
-delete require.cache[require.resolve('../../lib/commands.js')];
-import { bodyMenu } from '../../lib/commands.js'; // Solo tu bodyMenu nuevo
+import { bodyMenu } from '../../lib/commands.js'; // tu menú nuevo
 
 export default {
-  command: ['allmenu', 'help', 'menu'],
+  command: ['menu', 'help', 'allmenu'],
   category: 'info',
   run: async (client, m, args, usedPrefix, command) => {
     try {
-      // Fechas y hora
       const now = new Date();
       const colombianTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Caracas' }));
       const tiempo = colombianTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/,/g, '');
       const tempo = moment.tz('America/Caracas').format('hh:mm A');
 
-      // Datos del bot
       const botId = client?.user?.id.split(':')[0] + '@s.whatsapp.net';
       const botSettings = global.db.data.settings[botId] || {};
       const botname = botSettings.botname || '';
@@ -28,13 +25,11 @@ export default {
       const botType = isOficialBot ? 'Principal/Owner' : 'Sub Bot';
       const users = Object.keys(global.db.data.users).length;
       const device = getDevice(m.key.id);
-      const sender = global.db.data.users[m.sender]?.name || 'Usuario';
-      const uptime = client.uptime ? formatUptime(Date.now() - client.uptime) : "Desconocido";
+      const sender = global.db.data.users[m.sender].name;
+      const uptime = client.uptime ? formatearMs(Date.now() - client.uptime) : "Desconocido";
 
-      // Construir mensaje solo con bodyMenu
+      // Usar solo bodyMenu
       let menu = bodyMenu;
-
-      // Reemplazos de variables
       const replacements = {
         $owner: owner || 'Oculto por privacidad',
         $botType: botType,
@@ -54,7 +49,7 @@ export default {
       }
 
       // Enviar mensaje
-      await client.sendMessage(m.chat, banner?.includes('.mp4') || banner?.includes('.webm') ? {
+      await client.sendMessage(m.chat, banner.includes('.mp4') || banner.includes('.webm') ? {
         video: { url: banner },
         gifPlayback: true,
         caption: menu,
@@ -95,11 +90,10 @@ export default {
   }
 };
 
-// Función de formateo de tiempo
-function formatUptime(ms) {
-  const seconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  return [days && `${days}d`, `${hours % 24}h`, `${minutes % 60}m`, `${seconds % 60}s`].filter(Boolean).join(" ");
+function formatearMs(ms) {
+  const segundos = Math.floor(ms / 1000);
+  const minutos = Math.floor(segundos / 60);
+  const horas = Math.floor(minutos / 60);
+  const dias = Math.floor(horas / 24);
+  return [dias && `${dias}d`, `${horas % 24}h`, `${minutos % 60}m`, `${segundos % 60}s`].filter(Boolean).join(" ");
 }
