@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import PDFDocument from 'pdfkit';
 import Jimp from 'jimp';
 
 export default {
@@ -13,19 +12,10 @@ export default {
       const response = await fetch(imageUrl);
       const imageBuffer = await response.buffer();
 
-      // Crear thumbnail (300x150) para preview
+      // Crear thumbnail 300x150
       const thumb = await Jimp.read(imageBuffer)
         .then(img => img.resize(300, 150).getBufferAsync(Jimp.MIME_JPEG))
-        .catch(() => imageBuffer); // fallback si falla
-
-      // Crear PDF en memoria
-      const doc = new PDFDocument({ autoFirstPage: false });
-      const chunks = [];
-      doc.addPage({ size: [595, 842] }); // tamaño A4
-      doc.image(imageBuffer, { fit: [500, 400], align: 'center', valign: 'center' });
-      doc.end();
-      for await (const chunk of doc) chunks.push(chunk);
-      const pdfBuffer = Buffer.concat(chunks);
+        .catch(() => imageBuffer);
 
       // Texto del menú
       const tagUser = '@' + m.sender.split('@')[0];
@@ -33,13 +23,13 @@ export default {
       const greeting = hour < 12 ? 'Buenos días 🌅' : hour < 18 ? 'Buenas tardes 🌤' : 'Buenas noches 🌙';
       const menuTexto = `Hola ${tagUser}, ${greeting}!\nBienvenid@ a DemitraBot 🌸`;
 
-      // Enviar PDF con thumbnail y buttons
+      // Enviar mensaje con la imagen como documento “dummy” para WhatsApp
       await client.sendMessage(
         m.chat,
         {
-          document: pdfBuffer,
-          mimetype: 'application/pdf',
-          fileName: 'menu archivo demitra.pdf',
+          document: imageBuffer,
+          mimetype: 'image/jpeg',
+          fileName: 'Demilove.jpg',
           caption: menuTexto,
           jpegThumbnail: thumb,
           mentions: [m.sender],
@@ -65,5 +55,3 @@ export default {
       console.error('Error en plugin menu.js:', e);
       await m.reply('❌ Ocurrió un error al generar el menú.');
     }
-  }
-};
