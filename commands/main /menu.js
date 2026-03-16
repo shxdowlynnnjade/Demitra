@@ -18,25 +18,18 @@ export default {
       const namebot = botSettings.namebot || '';
       const banner = botSettings.banner || '';
       const owner = botSettings.owner || '';
-      const canalId = botSettings.id || '';
-      const canalName = botSettings.nameid || '';
-
-      const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net';
-      const botType = isOficialBot ? 'Principal/Owner' : 'Sub Bot';
-      const users = Object.keys(global.db.data.users).length;
-      const device = getDevice(m.key.id);
       const sender = global.db.data.users[m.sender].name;
       const uptime = client.uptime ? formatearMs(Date.now() - client.uptime) : "Desconocido";
 
-      let menu = bodyMenu; // tu menú nuevo
+      let menu = bodyMenu;
 
       const replacements = {
         $owner: owner || 'Oculto por privacidad',
-        $botType: botType,
-        $device: device,
+        $botType: 'Principal/Owner',
+        $device: getDevice(m.key.id),
         $tiempo: tiempo,
         $tempo: tempo,
-        $users: users.toLocaleString(),
+        $users: Object.keys(global.db.data.users).length,
         $sender: sender,
         $botname: botname,
         $namebot: namebot,
@@ -51,7 +44,7 @@ export default {
       await client.sendMessage(m.chat, { text: menu }, { quoted: m });
 
     } catch (e) {
-      await m.reply(`> Error al ejecutar el comando *${usedPrefix + command}*.\n> [Error: *${e.message}*]`);
+      await m.reply(`> Error al ejecutar *${usedPrefix + command}*.\n> [Error: ${e.message}]`);
     }
   }
 };
