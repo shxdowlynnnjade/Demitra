@@ -1,51 +1,71 @@
-// commands/plugins/menu.js
-export default {
-  command: ['menu', 'help', 'allmenu'], // comandos que activan este plugin
-  category: 'main',                     // categoría para organizar
-  description: 'Muestra el menú de comandos del bot',
-  run: async (client, m, args, usedPrefix = '#') => {
+import fs from 'fs'
+import fetch from 'node-fetch'
+import { database } from '../lib/database.js'
+
+const handler = async (m, { conn }) => {
     try {
-      const botname = global.botname || 'Zero Two';
-      const senderName = m.pushName || 'amig@';
-      const comandosCargados = Array.from(global.comandos.keys()).join(', ');
+        const botname = global.botname || global.botName || 'Zero Two'
+        const pluginFiles = fs.readdirSync('./plugins').filter(file => file.endsWith('.js'))
+        const grouped = {}
+        for (const file of pluginFiles) {
+            try {
+                const plugin = (await import(`../plugins/${file}`)).default
+                const tags = plugin?.tags || ['misc']
+                const cmd = plugin?.command?.[0] || file.replace('.js', '')
+                for (const tag of tags) {
+                    if (!grouped[tag]) grouped[tag] = []
+                    grouped[tag].push(cmd)
+                }
+            } catch {
+                const cmd = file.replace('.js', '')
+                if (!grouped['misc']) grouped['misc'] = []
+                grouped['misc'].push(cmd)
+            }
+        }
 
-      // Saludo según hora
-      const zonaHoraria = 'America/Bogota';
-      const ahora = new Date();
-      const hora = parseInt(
-        ahora.toLocaleTimeString('es-CO', { timeZone: zonaHoraria, hour: '2-digit', hour12: false })
-      );
-      let saludo, carita;
-      if (hora >= 5 && hora < 12) {
-        saludo = 'buenos días';
-        carita = '(＊^▽^＊) ☀️';
-      } else if (hora >= 12 && hora < 18) {
-        saludo = 'buenas tardes';
-        carita = '(｡•̀ᴗ-)✧ 🌸';
-      } else {
-        saludo = 'buenas noches';
-        carita = '(◕‿◕✿) 🌙';
-      }
+        const totalCmds = Object.values(grouped).flat().length
+        const totalUsers = Object.keys(database.data.users || {}).length
+        const registeredUsers = Object.values(database.data.users || {}).filter(u => u.registered).length
 
-      // URL de la imagen que quieres adjuntar
-      const imageUrl = 'https://files.catbox.moe/s3gu8x.jpg';
+        let seccionesTexto = Object.entries(grouped).map(([tag, cmds]) =>
+`𖤐 *${tag.toUpperCase()}*
+${cmds.map(c => `  ꕦ ${c}`).join('\n')}
+`
+        ).join('\n')
 
-      // Texto del menú
-      const menuTexto = `░▒ㅤ🌸ㅤ＃DEMILOVEㅤㅤ＞ㅤ                                       ૮₍´ ˶ ｪ ˵ ₎ა                            〘ㅤ☆ㅤ〙
+        const zonaHoraria = 'America/Bogota'
+        const ahora = new Date()
+        const hora = parseInt(ahora.toLocaleTimeString('es-CO', { timeZone: zonaHoraria, hour: '2-digit', hour12: false }))
+        let saludo, carita
+        if (hora >= 5 && hora < 12) {
+            saludo = 'buenos días'
+            carita = '(＊^▽^＊) ☀️'
+        } else if (hora >= 12 && hora < 18) {
+            saludo = 'buenas tardes'
+            carita = '(｡•̀ᴗ-)✧ 🌸'
+        } else {
+            saludo = 'buenas noches'
+            carita = '(◕‿◕✿) 🌙'
+        }
 
-                        𝐂𝐫𝐞𝐚𝐝𝐨𝐫 :: 
-> ㅤㅤ    @Demitra(adara)
-
-꒰ㅤ۪ㅤֺㅤ🪼੭ㅤ꧇ㅤBuenas tardes. Soy Demi, la sonrisa hecha código.
-
-꒰  👾 ꧇ㅤLe muestro mis comandos. Ordenados y afilados.
+        let menuTexto = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
+橫㈵𓂂ㅤㅤ𓐮𝖣ۣؗ𝖤ۣؗ𝖬ۣؗ𝖨ۣؗ𝖳ۣؗ𝖱ۣؗ𝖠ㅤㅤ▞ㅤㅤ𓆭𓆭₂₈₎
+◯◯▸ㅤㅤ⎯⎯▬𝖫ؗOVEㅤㅤ🔘ㅤㅤ ▓█
 
 
-        ࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛   ୨୧  ࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛
-https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A
+⟍𝄄𝄄𝄄𝄄𝄄₂₈₎ㅤㅤ 🔲ㅤㅤ#𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ⬤⬤⏋
+> ㅤㅤㅤㅤ﹫Demitra(Adara) ㅤㅤ𔘓
 
 
-> ㅤㅤ⧼ㅤ Principalㅤ⧽ㅤ🫐❝
+ㅤ  𝗐𝖾𝗅𝖼𝗈𝗆𝖾ㅤ𝗌𝗈𝗒ㅤ𝗗᤻͟𝗲᤻͟𝗺᤻͟𝗶᤻͟𝗍᤻͟𝗋᤻͟𝗮᤻͟ㅤ𝗅𝖺ㅤ
+ㅤ     𝗌𝗈𝗇𝗋𝗂𝗌𝖺ㅤ𝗁𝖾𝖼𝗁𝖺ㅤ𝖼͟𝗈᤻͟𝖽⵿𝗂𝗀᤻͟𝗈
+
+ㅤ   𝖺ㅤ𝖼𝗈𝗇𝗍𝗂𝗇𝗎𝖺𝖼𝗂𝗈𝗇ㅤ𝗅𝖾ㅤ𝗆𝗎𝖾𝗌
+ㅤㅤ   -𝗍𝗋𝗈ㅤ𝗆𝗂𝗌ㅤ𝖼⵿𝗈͟𝗆᤻͟𝖺᤻͟𝗇᤻͟𝖽᤻͟𝗈⵿𝗌
+
+
+＿＿／ ㅤㅤ ◢Principal. ㅤㅤ  攤䥵𓌙
+
 .reg
 .menu/help/menú/allmenu
 .infobot/infosocket
@@ -53,8 +73,8 @@ https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A
 .report/reporte/sug/suggest
 
 
+＿＿／ ㅤ ㅤ ◢Setperfi+   ㅤ  攤䥵𓌙
 
-> ㅤㅤ⧼ㅤ Set perfil?+ㅤ⧽ㅤ🪼❝
 .profile/perfil
 .setdescription/setdesc
 .setpasatiempo
@@ -66,23 +86,28 @@ https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A
 .delgenre
 .removehobby
 .level/lvl
-.afk (estudiando, durmiendo, etc?) 
+.afk (estudiando, durmiendo, etc?)
 
-> ㅤㅤ⧼ㅤ Grupo+ㅤ⧽ㅤ🍥❝
+ 
+＿＿／ ㅤ ㅤ ◢Groupㅤ ㅤ  攤䥵𓌙
+
 .invite/invitar 
 .hidetag/tag
 .kick
 .todos/invocar/tagall
 .join link/unir link
 
-> ㅤㅤ⧼ㅤ Stickers+ㅤ⧽ㅤ🪼❝
+
+＿＿／ ㅤ ㅤ ◢Stickers ㅤ ㅤ  攤䥵𓌙
+
 .bratt/brat texto
 .bratv
 .emojimix (Stickers emoji 😂+🪻)
 .qc texto (Stickers)
 .sticker/s
 
-> ㅤㅤ⧼ㅤ extras+ㅤ⧽ㅤ🍥❝
+＿＿／ ㅤ ㅤ ◢Extras+ㅤ ㅤ  攤䥵𓌙
+
 .self
 .logout (subbapagado) 
 .reload (prendido) 
@@ -96,39 +121,61 @@ https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A
 .toimg /toimage (sticker a imagen)
 .tourl (Convierte en url) 
 
-> ㅤㅤ⧼ㅤ Mas+ㅤ⧽ㅤ🪷❝
+
+／ ㅤ ㅤ ◢𝗋𝖺𝗆𝖽𝗈𝗆 ㅤ ㅤ  攤䥵𓌙
+
 .translate/trad/traducir (Traduce) 
 .ia/chatgpt
 
-> ㅤㅤ⧼ㅤ Descargas+ㅤ⧽ㅤ🐢❝
 
-.ytsearch/search (búsqueda en youtube) 
-.play2/mp4/ytmp4/ytvideo/playvideo (videos descargados) 
-.play/mp3/ytmp3 /ytaudio/playaudio (Música audio)
-.tiktok / tt / tiktoksearch / ttsearch / tts (descarga y búsqueda) 
-.pinterest/pin (busqueda) 
-.instagram/ig
-.mediafire/mf
-.apk/aptoide/apkdl
-.imagen/img/image(Google imágenes)
+> ㅤㅤㅤㅤ@𝗉𝗋𝗈𝗑𝗂𝗆𝗈ㅤㅤ𔘓
 
-> © 2026 creado por Jade.`;
 
-      // Enviar mensaje con imagen
-      await client.sendMessage(
-        m.chat,
-        {
-          image: { url: imageUrl },   // imagen adjunta
-          caption: menuTexto,         // texto del menú
-          mentions: [m.sender],       // mención al usuario
-          footer: '🌸 DEMITRA',       // opcional
-        },
-        { quoted: m }
-      );
+▙▅▚ ㅤ ⇲𝖢ؗ𝖧ۣۤ𝖠ؗ𝖭ۖ𝖭ۤ𝖤ۣ𝖫ㅤ⦙⦙⦙◗ ㅤ 𓂧⁸⁶
+> https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A
+
+
+ㅤㅤㅤㅤ𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤ𝗌𝗁𝖾𝗋𝗒𝗅
+ㅤ`.trim()
+
+        const response = await fetch('https://files.catbox.moe/s3gu8x.jpg')
+        const buffer = await response.buffer()
+        const base64 = buffer.toString('base64')
+
+        await conn.sendMessage(m.chat, {
+            document: buffer,
+            mimetype: 'application/pdf',
+            fileName: `Demilove.pdf`,
+            fileLength: 2199023255552,
+            pageCount: 2026,
+            caption: menuTexto,
+            mentions: [m.sender],
+            contextInfo: {
+                isForwarded: true,
+                forwardingScore: 999,
+                externalAdReply: {
+                    title: '𝖣ۣؗ𝖤ۣؗ𝖬ۣؗ𝖨ۣؗ𝖳ۣؗ𝖱ۣؗ𝖠',
+                    body:'BOMSHACALAKA💗',
+                    mediaType: 1,
+                    thumbnail: base64,
+                    renderLargerThumbnail: true,
+                    sourceUrl: 'https://whatsapp.com/channel/0029Vb6p68rF6smrH4Jeay3Y'
+                },
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363404822730259@newsletter',
+                    newsletterName: '𝐙𝐄𝐑𝐎 𝐓𝐖𝐎',
+                    serverMessageId: -1
+                }
+            }
+        }, { quoted: m })
 
     } catch (e) {
-      console.error('Error en plugin menu.js:', e);
-      m.reply('💔 Demi avisa,que algo salió mal al generar el menú...');
+        console.error(e)
+        m.reply('Demi dice que algo salió mal al generar el menú... prueba de nuevo.')
     }
-  }
-};
+}
+
+handler.help = ['menu']
+handler.tags = ['main']
+handler.command = ['menu', 'help', 'ayuda']
+export default handler
