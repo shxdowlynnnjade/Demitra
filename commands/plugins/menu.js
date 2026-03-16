@@ -107,6 +107,7 @@ export default {
 .imagen/img/image(Google imágenes)
 
 > © 2026 creado por Jade.
+
 https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A`;
 
       // Enviar mensaje simple (texto)
