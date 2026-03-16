@@ -1,60 +1,34 @@
-import { instagramdl } from '@bochilteam/scraper'
+import fetch from 'node-fetch'
 
-export default {
-  command: ['instagram', 'ig'],
-  category: 'downloader',
-  run: async (client, m, args, usedPrefix, command) => {
+let handler = async (m, { conn, args }) => {
 
-    if (!args[0]) {
-      return m.reply('《✧》 Envíe un enlace de Instagram.')
-    }
+if (!args[0]) throw 'Envíe un enlace de Instagram.'
 
-    if (!args[0].includes('instagram.com')) {
-      return m.reply('《✧》 El enlace no es válido.')
-    }
+if (!args[0].includes('instagram.com')) throw 'El enlace no es válido.'
 
-    try {
+let api = `https://api.nekolabs.my.id/downloader/instagram?url=${encodeURIComponent(args[0])}`
 
-      const data = await instagramdl(args[0])
+let res = await fetch(api)
+let json = await res.json()
 
-      if (!data || !data.length) {
-        return m.reply('《✧》 No se pudo obtener el contenido.')
-      }
+if (!json.success) throw 'No se pudo descargar el video.'
 
-      for (let media of data) {
+let video = json.result.downloadUrl[0]
 
-        if (media.url.includes('.mp4')) {
+await conn.sendMessage(
+m.chat,
+{
+video: { url: video },
+mimetype: 'video/mp4',
+caption: 'Video descargado de Instagram'
+},
+{ quoted: m }
+)
 
-          await client.sendMessage(
-            m.chat,
-            {
-              video: { url: media.url },
-              caption: `✦ Descarga de Instagram\n\n🔗 ${args[0]}`,
-              mimetype: 'video/mp4',
-              fileName: 'instagram.mp4'
-            },
-            { quoted: m }
-          )
-
-        } else {
-
-          await client.sendMessage(
-            m.chat,
-            {
-              image: { url: media.url },
-              caption: `✦ Imagen de Instagram\n\n🔗 ${args[0]}`
-            },
-            { quoted: m }
-          )
-
-        }
-
-      }
-
-    } catch (e) {
-      m.reply('《✧》 Error al descargar el contenido.')
-      console.log(e)
-    }
-
-  }
 }
+
+handler.help = ['ig <link>']
+handler.tags = ['downloader']
+handler.command = ['ig','instagram']
+
+export default handler
