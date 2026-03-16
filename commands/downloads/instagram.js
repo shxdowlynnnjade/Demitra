@@ -13,7 +13,8 @@ export default {
     try {
       const data = await getInstagramMedia(args[0])
       if (!data) return m.reply('《✧》 No se pudo obtener el contenido.')
-      const infoMessage = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
+            const caption =
+        `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 ▙▅▚ㅤㅤ⇲DEMITRAㅤㅤ⦙⦙⦙◗ㅤㅤ𓂧⁸⁶
 𐇡𐇡 ㅤㅤ ㏩𓄼ㅤㅤ◢𝖫OVEㅤㅤ 🔲ㅤㅤ⬤⬤
 
@@ -45,8 +46,7 @@ export default {
 
 >𝖤𝖭𝖵𝖨𝖠𝖣𝖮 / 𝖤𝖭𝖵𝖨𝖠𝖭𝖣𝖮 / 𝖫𝖫𝖤𝖦𝖠𝖣𝖮<
 
-ㅤㅤ      𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤAdara
-`;
+ㅤㅤ      𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤAdara`
       if (data.type === 'video') {
         await client.sendMessage(m.chat, { video: { url: data.url }, caption, mimetype: 'video/mp4', fileName: 'ig.mp4' }, { quoted: m })
       } else if (data.type === 'image') {
