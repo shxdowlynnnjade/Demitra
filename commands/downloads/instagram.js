@@ -1,55 +1,95 @@
-const handler = async (m, { args, conn, usedPrefix, command }) => {
-  try {
+import fetch from 'node-fetch'
 
-    const mensajes = {
-      instagram: '「✦」Por favor, proporciona un enlace válido de Instagram.',
-      ig: '「✦」Por favor, proporciona un enlace válido de Instagram.',
-      facebook: '「✦」Por favor, proporciona un enlace válido de Facebook.',
-      fb: '「✦」Por favor, proporciona un enlace válido de Facebook.'
-    };
-
-    if (!args[0]) return conn.reply(m.chat, mensajes[command] || '「✦」Por favor, proporciona un enlace válido.', m);
-
-    let data = [];
-    await m.react('🕒');
-
-
+export default {
+  command: ['instagram', 'ig'],
+  category: 'descargas',
+  description: 'Descarga videos o imágenes de Instagram',
+  
+  run: async (client, m, args, usedPrefix, command) => {
     try {
-      const api = `${global.APIs.vreden.url}/api/igdownload?url=${encodeURIComponent(args[0])}`;
-      const res = await fetch(api);
-      const json = await res.json();
-      if (json.resultado?.respuesta?.datos?.length) {
-        data = json.resultado.respuesta.datos.map(v => v.url);
+      if (!args[0]) return client.reply(m.chat, '「✦」Por favor, proporciona un enlace válido de Instagram.', m)
+      if (!args[0].match(/instagram\.com\/(p|reel|share|tv|stories)\//)) {
+        return client.reply(m.chat, '「✦」El enlace no parece válido. Asegúrate de que sea de Instagram.', m)
       }
-    } catch {}
 
+      await m.react('🕒')
 
-    if (!data.length) {
-      try {
-        const api = `${global.APIs.delirius.url}/download/instagram?url=${encodeURIComponent(args[0])}`;
-        const res = await fetch(api);
-        const json = await res.json();
-        if (json.status && json.data?.length) {
-          data = json.data.map(v => v.url);
-        }
-      } catch {}
+      const data = await getInstagramMedia(args[0])
+      if (!data) return client.reply(m.chat, 'No se pudo obtener el contenido del enlace.', m)
+
+      const caption = `
+Título: ${data.title || 'Desconocido'}
+Descripción: ${data.caption || 'Sin descripción'}
+Likes: ${data.like || 0}
+Vistas: ${data.views || 0}
+Comentarios: ${data.comment || 0}
+Duración: ${data.duration || 'Desconocido'}
+Link: ${args[0]}
+      `.trim()
+
+      if (data.type === 'video') {
+        // Descarga el video como buffer
+        const videoBuffer = await fetch(data.url)
+          .then(res => res.arrayBuffer())
+          .then(Buffer.from)
+
+        await client.sendMessage(
+          m.chat,
+          { video: videoBuffer, caption, mimetype: 'video/mp4', fileName: 'instagram.mp4' },
+          { quoted: m }
+        )
+      } else if (data.type === 'image') {
+        await client.sendMessage(
+          m.chat,
+          { image: { url: data.url }, caption },
+          { quoted: m }
+        )
+      } else {
+        throw new Error('Contenido no soportado.')
+      }
+
+      await m.react('✔️')
+
+    } catch (error) {
+      await m.react('✖️')
+      await client.reply(
+        m.chat,
+        `Ocurrió un error inesperado.\nUsa *${usedPrefix}report* para informarlo.\n\nDetalles: ${error.message}`,
+        m
+      )
     }
-
-    if (!data.length) return conn.reply(m.chat, `No se pudo obtener el contenido del enlace.`, m);
-
-    for (let media of data) {
-      await conn.sendFile(m.chat, media, 'video.mp4', `> ✩ Aqui tienes tu pedido.`, m);
-      await m.react('✔️');
-    }
-  } catch (error) {
-    await m.react('✖️');
-    await m.reply(`Ocurrió un error inesperado.\nUsa *${usedPrefix}report* para informarlo.\n\nDetalles: ${error.message}`);
   }
-};
+}
 
-handler.command = ['instagram', 'ig', 'facebook', 'fb'];
-handler.tags = ['descargas'];
-handler.help = ['instagram', 'ig', 'facebook', 'fb'];
-//handler.coin = 22
+// Función para obtener media de varias APIs
+async function getInstagramMedia(url) {
+  const apis = [
+    {
+      endpoint: `${global.APIs.vreden.url}/api/igdownload?url=${encodeURIComponent(url)}`,
+      extractor: res => {
+        if (!res.resultado?.respuesta?.datos?.length) return null
+        const mediaUrl = res.resultado.respuesta.datos[0].url
+        return { type: 'video', url: mediaUrl } // vreden devuelve solo videos
+      }
+    },
+    {
+      endpoint: `${global.APIs.delirius.url}/download/instagram?url=${encodeURIComponent(url)}`,
+      extractor: res => {
+        if (!res.status || !Array.isArray(res.data) || !res.data.length) return null
+        const media = res.data[0]
+        return { type: media.tipo === 'video' ? 'video' : 'image', url: media.url }
+      }
+    }
+  ]
 
-export default handler;
+  for (const { endpoint, extractor } of apis) {
+    try {
+      const res = await fetch(endpoint).then(r => r.json())
+      const result = extractor(res)
+      if (result) return result
+    } catch {}
+    await new Promise(r => setTimeout(r, 500))
+  }
+
+  return null
+}
