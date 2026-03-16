@@ -1,31 +1,27 @@
 // commands/plugins/menu.js
+import fetch from 'node-fetch';
+import Jimp from 'jimp';
+
 export default {
-  command: ['menu', 'help', 'allmenu'], // comandos que activan este plugin
-  category: 'main',                     // categoría para organizar
+  command: ['menu', 'help', 'allmenu'],
+  category: 'main',
   description: 'Muestra el menú de comandos del bot',
   run: async (client, m, args, usedPrefix = '#') => {
     try {
+      // Tu código original del saludo
       const botname = global.botname || 'Zero Two';
       const senderName = m.pushName || 'amig@';
-      const comandosCargados = Array.from(global.comandos.keys()).join(', ');
+      const comandosCargados = Array.from(global.comandos.keys()).join(',');
 
-      // Saludo según hora
       const zonaHoraria = 'America/Bogota';
       const ahora = new Date();
       const hora = parseInt(ahora.toLocaleTimeString('es-CO', { timeZone: zonaHoraria, hour: '2-digit', hour12: false }));
       let saludo, carita;
-      if (hora >= 5 && hora < 12) {
-        saludo = 'buenos días';
-        carita = '(＊^▽^＊) ☀️';
-      } else if (hora >= 12 && hora < 18) {
-        saludo = 'buenas tardes';
-        carita = '(｡•̀ᴗ-)✧ 🌸';
-      } else {
-        saludo = 'buenas noches';
-        carita = '(◕‿◕✿) 🌙';
-      }
+      if (hora >= 5 && hora < 12) { saludo = 'buenos días'; carita = '(＊^▽^＊) ☀️'; }
+      else if (hora >= 12 && hora < 18) { saludo = 'buenas tardes'; carita = '(｡•̀ᴗ-)✧ 🌸'; }
+      else { saludo = 'buenas noches'; carita = '(◕‿◕✿) 🌙'; }
 
-      // Texto del menú
+      // Tu texto completo del menú (sin cambios)
       const menuTexto = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 橫㈵𓂂ㅤㅤ𓐮𝖣ۣؗ𝖤ۣؗ𝖬ۣؗ𝖨ۣؗ𝖳ۣؗ𝖱ۣؗ𝖠ㅤㅤ▞ㅤㅤ𓆭𓆭₂₈₎
 ◯◯▸ㅤㅤ⎯⎯▬𝖫ؗOVEㅤㅤ🔘ㅤㅤ ▓█
@@ -116,15 +112,37 @@ export default {
 ㅤㅤㅤㅤ𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤ𝗌𝗁𝖾𝗋𝗒𝗅
 ㅤ`;
 
-      // Enviar mensaje simple (texto)
-      await client.sendMessage(m.chat, {
-        text: menuTexto,
-        mentions: [m.sender],
-      }, { quoted: m });
+      // Descargar imagen
+      const imageUrl = 'https://files.catbox.moe/s3gu8x.jpg';
+      const response = await fetch(imageUrl);
+      const imageBuffer = await response.buffer();
+
+      // Crear thumbnail para PDF preview
+      const thumb = await Jimp.read(imageBuffer)
+        .then(img => img.resize(300, 150).getBufferAsync(Jimp.MIME_JPEG))
+        .catch(() => imageBuffer);
+
+      // PDF dummy para mostrar icono
+      const pdfBuffer = Buffer.from('%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF', 'utf-8');
+
+      // Enviar mensaje **exactamente como quieres**
+      await client.sendMessage(
+        m.chat,
+        {
+          image: { url: imageUrl },      // Imagen visible arriba
+          caption: menuTexto,            // Tu texto completo intacto
+          mentions: [m.sender],
+          document: pdfBuffer,           // PDF dummy solo para icono
+          fileName: 'Demilove.pdf',
+          mimetype: 'application/pdf',
+          jpegThumbnail: thumb            // Miniatura del PDF
+        },
+        { quoted: m }
+      );
 
     } catch (e) {
       console.error('Error en plugin menu.js:', e);
-      m.reply(' Demitra avisa que  algo salió mal al generar el menú...');
+      m.reply('💔 Demitra avisa que algo salió mal al generar el menú...');
     }
   }
 };
