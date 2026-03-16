@@ -17,7 +17,7 @@ export default {
       const tiempo = colombianTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/,/g, '');
       const tempo = moment.tz('America/Caracas').format('hh:mm A');
 
-      const botId = client?.user?.id.split(':')[0] + '@s.whatsapp.net';
+      const botId = client.user.id.split(':')[0] + '@s.whatsapp.net';
       const botSettings = global.db.data.settings[botId] || {};
       const botname = botSettings.botname || 'Bot';
       const namebot = botSettings.namebot || 'Bot';
@@ -29,7 +29,7 @@ export default {
 
       const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net';
       const botType = isOficialBot ? 'Principal/Owner' : 'Sub Bot';
-      const users = Object.keys(global.db.data.users).length;
+      const usersCount = Object.keys(global.db.data.users).length;
       const device = getDevice(m.key.id);
       const senderName = global.db.data.users[m.sender]?.name || m.pushName || 'Sin nombre';
 
@@ -44,27 +44,26 @@ export default {
 
       const input = normalize(args[0] || '');
       const cat = Object.keys(alias).find(k => alias[k].map(normalize).includes(input));
-      const category = cat ? cat : '. *(˶ᵔ ᵕ ᵔ˶)*';
+      const categoryName = cat ? cat : 'Todas';
 
       if (args[0] && !cat) {
         return m.reply(`《✧》 La categoría *${args[0]}* no existe. Las categorías disponibles son: *${Object.keys(alias).join(', ')}*.\n> Para ver la lista completa escribe *${usedPrefix}menu*\n> Para ver los comandos de una categoría escribe *${usedPrefix}menu [categoría]*`);
       }
 
       // Construir contenido del menú
-      const sections = menuObject;
-      const content = cat ? String(sections[cat] || '') : Object.values(sections).map(s => String(s || '')).join('\n\n');
+      const content = cat ? String(menuObject[cat] || '') : Object.values(menuObject).map(s => String(s || '')).join('\n\n');
       let menu = bodyMenu + '\n\n' + content;
 
-      // Reemplazar variables
+      // Reemplazar variables dinámicas
       const replacements = {
         $owner: owner ? (global.db.data.users[owner]?.name || owner.split('@')[0]) : 'Oculto',
         $botType: botType,
         $device: device,
         $tiempo: tiempo,
         $tempo: tempo,
-        $users: users.toLocaleString(),
+        $users: usersCount.toLocaleString(),
         $link: link,
-        $cat: category,
+        $cat: categoryName,
         $sender: senderName,
         $botname: botname,
         $namebot: namebot,
@@ -75,6 +74,7 @@ export default {
         menu = menu.replace(new RegExp(`\\${key}`, 'g'), value);
       }
 
+      // Enviar mensaje
       await client.sendMessage(m.chat, banner.endsWith('.mp4') || banner.endsWith('.webm') ? {
         video: { url: banner },
         gifPlayback: true,
