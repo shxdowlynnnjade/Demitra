@@ -1,19 +1,17 @@
 import { getDevice } from '@whiskeysockets/baileys';
 import moment from 'moment-timezone';
-import { bodyMenu } from '../../lib/commands.js'; // Solo bodyMenu
+import { bodyMenu } from '../../lib/commands.js'; // solo bodyMenu
 
 export default {
   command: ['allmenu', 'help', 'menu'],
   category: 'info',
   run: async (client, m, args, usedPrefix, command) => {
     try {
-      // Hora local
       const now = new Date();
       const colombianTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Caracas' }));
       const tiempo = colombianTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/,/g, '');
       const tempo = moment.tz('America/Caracas').format('hh:mm A');
 
-      // Info del bot
       const botId = client?.user?.id.split(':')[0] + '@s.whatsapp.net';
       const botSettings = global.db.data.settings[botId] || {};
       const botname = botSettings.botname || '';
@@ -22,17 +20,16 @@ export default {
       const owner = botSettings.owner || '';
       const canalId = botSettings.id || '';
       const canalName = botSettings.nameid || '';
+
       const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net';
       const botType = isOficialBot ? 'Principal/Owner' : 'Sub Bot';
-
-      // Info de usuarios
       const users = Object.keys(global.db.data.users).length;
       const device = getDevice(m.key.id);
       const sender = global.db.data.users[m.sender].name;
       const uptime = client.uptime ? formatearMs(Date.now() - client.uptime) : "Desconocido";
 
-      // Prepara menú con reemplazos
-      let menu = bodyMenu;
+      let menu = bodyMenu; // tu menú nuevo
+
       const replacements = {
         $owner: owner || 'Oculto por privacidad',
         $botType: botType,
@@ -46,45 +43,12 @@ export default {
         $prefix: usedPrefix,
         $uptime: uptime
       };
+
       for (const [key, value] of Object.entries(replacements)) {
         menu = menu.replace(new RegExp(`\\${key}`, 'g'), value);
       }
 
-      // Enviar mensaje
-      await client.sendMessage(m.chat, banner?.endsWith('.mp4') || banner?.endsWith('.webm') ? {
-        video: { url: banner },
-        gifPlayback: true,
-        caption: menu,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: canalId,
-            serverMessageId: '',
-            newsletterName: canalName
-          }
-        }
-      } : {
-        text: menu,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: canalId,
-            serverMessageId: '',
-            newsletterName: canalName
-          },
-          externalAdReply: {
-            title: botname,
-            body: `${namebot}, By Adara`,
-            showAdAttribution: false,
-            thumbnailUrl: banner,
-            mediaType: 1,
-            previewType: 0,
-            renderLargerThumbnail: true
-          }
-        }
-      }, { quoted: m });
+      await client.sendMessage(m.chat, { text: menu }, { quoted: m });
 
     } catch (e) {
       await m.reply(`> Error al ejecutar el comando *${usedPrefix + command}*.\n> [Error: *${e.message}*]`);
