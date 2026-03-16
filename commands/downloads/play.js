@@ -30,39 +30,30 @@ export default {
           thumbBuffer = await getBuffer(videoInfo.image)
           const vistas = (videoInfo.views || 0).toLocaleString()
           const canal = videoInfo.author?.name || 'Desconocido'
-          const infoMessage = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
+          const infoMessage = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 ▙▅▚ㅤㅤ⇲DEMITRAㅤㅤ⦙⦙⦙◗ㅤㅤ𓂧⁸⁶
 𐇡𐇡 ㅤㅤ ㏩𓄼ㅤㅤ◢𝖫OVEㅤㅤ 🔲ㅤㅤ⬤⬤
 
-
-ㅤㅤㅤ `ㅤ𝗍𝗎   𝖼𝖺𝗇𝖼𝗂𝗈𝗇   𝗌𝖾ㅤ`
-ㅤㅤㅤ `ㅤ𝖾𝗌𝗍𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈.ㅤ`
-
-
-＿＿／ ㅤㅤ𓐮𝖳𝖨𝖳𝖴𝖫𝖮ㅤㅤ🔘ㅤㅤ ◥
-> ${title}.
+ㅤㅤㅤ 𝖳𝗂𝗍𝗎𝗅𝗈ㅤ🔘
+> ${title || 'Desconocido'}
 
 ＿＿／ ㅤㅤ𓐮𝖳𝖨𝖤𝖬𝖯𝖮ㅤ   🔘   ㅤ ◥
-> ${videoInfo.timestamp || 'Desconocido'}*.
+> ${videoInfo.timestamp || 'Desconocido'}
 
-＿＿／ ㅤㅤ𓐮𝖵𝖨𝖲𝖳𝖠𝖲ㅤㅤ🔘ㅤㅤ ◥
-> *${vistas}*.
+＿＿／ ㅤㅤ𓐮𝖵𝖨𝖲𝖳𝖠𝖲ㅤ🔘
+> ${vistas}
 
-＿＿／ ㅤㅤ𓐮PUBLICADOㅤㅤ🔘ㅤㅤ ◥
-> ${videoInfo.ago || 'Desconocido'}*.
+＿＿／ ㅤㅤ𓐮PUBLICADOㅤ🔘
+> ${videoInfo.ago || 'Desconocido'}
 
-＿＿／ ㅤㅤ𓐮𝖤𝖭𝖫𝖠𝖢𝖤ㅤㅤ🔘ㅤㅤ◥
-> *${url}*.
+＿＿／ ㅤㅤ𓐮𝖢𝖠𝖭𝖠𝖫ㅤ🔘
+> ${canal}
 
+＿＿／ ㅤㅤ𓐮𝖤𝖭𝖫𝖠𝖢𝖤ㅤ🔘
+> ${url}
 
-＿＿／⬤ㅤㅤ 𝖲𝖤𝖱𝖵𝖤𝖱 ㅤㅤ[橫㦥]
-
-
->𝖤𝖭𝖵𝖨𝖠𝖣𝖮 / 𝖤𝖭𝖵𝖨𝖠𝖭𝖣𝖮 / 𝖫𝖫𝖤𝖦𝖠𝖣𝖮<
-
-
-ㅤㅤ      𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤ𝗌𝗁𝖾𝗋𝗒𝗅
-ㅤ`
+ㅤㅤ      𝖼𝗋𝖾𝖺𝗍𝗈𝗋 𔘓 𝗌𝗁𝖾𝗋𝗒𝗅
+`;
           await client.sendMessage(m.chat, { image: thumbBuffer, caption: infoMessage }, { quoted: m })
         }
       } catch (err) {
