@@ -1,21 +1,25 @@
 // commands/plugins/menu.js
 import fetch from 'node-fetch'
 
-const handler = async (client, m, args, usedPrefix = '#') => {
+export default {
+  command: ['menu', 'help', 'allmenu'], // comandos que activan este plugin
+  category: 'main',                     // categoría
+  description: 'Muestra el menú de comandos del bot',
+  run: async (client, m, args, usedPrefix = '#') => {
     try {
-        const botname = global.botname || 'Zero Two';
-        const senderName = m.pushName || 'amig@';
+      const botname = global.botname || 'Zero Two';
+      const senderName = m.pushName || 'amig@';
 
-        // URL de la imagen de portada
-        const imageUrl = 'https://files.catbox.moe/s3gu8x.jpg';
+      // URL de la imagen de portada
+      const imageUrl = 'https://files.catbox.moe/s3gu8x.jpg';
 
-        // Obtener la imagen como buffer y base64
-        const response = await fetch(imageUrl);
-        const buffer = await response.buffer();
-        const base64 = buffer.toString('base64');
+      // Obtener la imagen como buffer y base64
+      const response = await fetch(imageUrl);
+      const buffer = await response.buffer();
+      const base64 = buffer.toString('base64');
 
-        // Texto del menú
-        const menuTexto = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
+      // Texto del menú
+      const menuTexto = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 橫㈵𓂂ㅤㅤ𓐮𝖣ۣؗ𝖤ۣؗ𝖬ۣؗ𝖨ۣؗ𝖳ۣؗ𝖱ۣؗ𝖠ㅤㅤ▞ㅤㅤ𓆭𓆭₂₈₎
 ◯◯▸ㅤㅤ⎯⎯▬𝖫ؗOVEㅤㅤ🔘ㅤㅤ ▓█
 
@@ -105,37 +109,32 @@ const handler = async (client, m, args, usedPrefix = '#') => {
 ㅤㅤㅤㅤ𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤ𝗌𝗁𝖾𝗋𝗒𝗅
 ㅤ`;
 
-        // Enviar mensaje tipo "documento" con preview
-        await client.sendMessage(
-            m.chat,
-            {
-                document: buffer,
-                mimetype: 'application/pdf',
-                fileName: `Demilove.pdf`,
-                caption: menuTexto,
-                mentions: [m.sender],
-                contextInfo: {
-                    externalAdReply: {
-                        title: '𝖣ۣؗ𝖤ۣؗ𝖬ۣؗ𝖨ۣؗ𝖳ۣؗ𝖱ۣؗ𝖠',
-                        body: 'BOMSHACALAKA💗',
-                        mediaType: 1,
-                        thumbnail: base64,
-                        renderLargerThumbnail: true,
-                        sourceUrl: 'https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A'
-                    }
-                }
-            },
-            { quoted: m }
-        );
+      // Enviar mensaje tipo "documento" con preview
+      await client.sendMessage(
+        m.chat,
+        {
+          document: buffer,
+          mimetype: 'application/pdf',
+          fileName: `Demilove.pdf`,
+          caption: menuTexto,
+          mentions: [m.sender],
+          contextInfo: {
+            externalAdReply: {
+              title: '𝖣ۣؗ𝖤ۣؗ𝖬ۣؗ𝖨ۣؗ𝖳ۣؗ𝖱ۣؗ𝖠',
+              body: 'BOMSHACALAKA💗',
+              mediaType: 1,
+              thumbnail: base64,
+              renderLargerThumbnail: true,
+              sourceUrl: 'https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A'
+            }
+          }
+        },
+        { quoted: m }
+      );
 
     } catch (e) {
-        console.error(e);
-        m.reply('Demi dice que algo salió mal al generar el menú... prueba de nuevo.');
+      console.error('Error en plugin menu.js:', e);
+      m.reply('💔 Demi dice que algo salió mal al generar el menú... prueba de nuevo.');
     }
+  }
 }
-
-handler.help = ['menu'];
-handler.tags = ['main'];
-handler.command = ['menu', 'help', 'allmenu'];
-
-export default handler;
