@@ -1,117 +1,80 @@
-import { bodyMenu, menuObject } from '../../lib/commands.js';
-import moment from 'moment-timezone';
-import { getDevice } from '@whiskeysockets/baileys';
+import fs from 'fs'
+import { database } from '../lib/database.js'
+import fetch from 'node-fetch'
+import { globalComandos } from '../lib/mainLoader.js' // si tienes tu loader main
 
-function normalize(text = '') {
-  text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
-  return text.endsWith('s') ? text.slice(0, -1) : text;
+// bodyMenu base, puede venir de otro archivo
+import { bodyMenu } from '../lib/commands.js'
+
+const handler = async (m, { conn, usedPrefix }) => {
+  try {
+    const botname = global.botname || 'Zero Two'
+    const senderName = global.db.data.users[m.sender]?.name || m.pushName || 'Sin nombre'
+
+    // Agrupar comandos por categoría
+    const grouped = {}
+    for (const [cmd, info] of global.comandos) {
+      const cat = info.category || 'otros'
+      if (!grouped[cat]) grouped[cat] = []
+      grouped[cat].push(cmd)
+    }
+
+    const seccionesTexto = Object.entries(grouped)
+      .map(([cat, cmds]) => `𖤐 *${cat.toUpperCase()}*\n${cmds.map(c => `  ꕦ ${c}`).join('\n')}`)
+      .join('\n\n')
+
+    // Saludo según hora
+    const horaActual = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota', hour12: false })
+    const hora = parseInt(horaActual.split(':')[0])
+    let saludo, carita
+    if (hora >= 5 && hora < 12) {
+      saludo = 'buenos días'
+      carita = '(＊^▽^＊) ☀️'
+    } else if (hora >= 12 && hora < 18) {
+      saludo = 'buenas tardes'
+      carita = '(｡•̀ᴗ-)✧ 🌸'
+    } else {
+      saludo = 'buenas noches'
+      carita = '(◕‿◕✿) 🌙'
+    }
+
+    // Reemplazos de bodyMenu
+    let menuTexto = bodyMenu
+      ? bodyMenu + '\n\n' + seccionesTexto
+      : `𖤐 ❖ 𝐌𝐄𝐍𝐔 ❖ 𖤐
+¡Hola *${senderName}*, ${saludo}~! ${carita}
+Soy *${botname}* y este es mi menú:
+
+ꙮ Comandos: ${global.comandos.size} disponibles
+ꙮ Usuarios: ${Object.keys(database.data.users || {}).length} conocidos
+ꙮ Registrados: ${Object.values(database.data.users || {}).filter(u => u.registered).length}
+
+${seccionesTexto}
+𖤐 ~Zero Two 🌸`
+
+    // Reemplazar variables dinámicas en bodyMenu
+    const replacements = {
+      $owner: global.db.data.settings?.owner || 'Oculto',
+      $prefix: usedPrefix,
+      $botname: botname,
+      $sender: senderName,
+      $users: Object.keys(database.data.users || {}).length,
+    }
+
+    for (const [key, value] of Object.entries(replacements)) {
+      menuTexto = menuTexto.replace(new RegExp(`\\${key}`, 'g'), value)
+    }
+
+    await conn.sendMessage(m.chat, { text: menuTexto, mentions: [m.sender] }, { quoted: m })
+
+  } catch (e) {
+    console.error(e)
+    m.reply('💔 Algo salió mal al generar el menú... prueba de nuevo~')
+  }
 }
 
-export default {
-  command: ['allmenu', 'help', 'menu'],
-  category: 'info',
-  run: async (client, m, args, usedPrefix, command) => {
-    try {
-      const now = new Date();
-      const colombianTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Caracas' }));
-      const tiempo = colombianTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/,/g, '');
-      const tempo = moment.tz('America/Caracas').format('hh:mm A');
+handler.help = ['menu']
+handler.tags = ['main']
+handler.command = ['menu', 'help', 'ayuda']
 
-      const botId = client.user.id.split(':')[0] + '@s.whatsapp.net';
-      const botSettings = global.db.data.settings[botId] || {};
-      const botname = botSettings.botname || 'Bot';
-      const namebot = botSettings.namebot || 'Bot';
-      const banner = botSettings.banner || '';
-      const owner = botSettings.owner || '';
-      const canalId = botSettings.id || '';
-      const canalName = botSettings.nameid || '';
-      const link = botSettings.link || '';
-
-      const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net';
-      const botType = isOficialBot ? 'Principal/Owner' : 'Sub Bot';
-      const usersCount = Object.keys(global.db.data.users).length;
-      const device = getDevice(m.key.id);
-      const senderName = global.db.data.users[m.sender]?.name || m.pushName || 'Sin nombre';
-
-      // Categorías para filtrar
-      const alias = {
-        downloads: ['downloads', 'descargas'],
-        grupo: ['grupo', 'group'],
-        profile: ['profile', 'perfil'],
-        sockets: ['sockets', 'bots'],
-        utils: ['utils', 'utilidades', 'herramientas']
-      };
-
-      const input = normalize(args[0] || '');
-      const cat = Object.keys(alias).find(k => alias[k].map(normalize).includes(input));
-      const categoryName = cat ? cat : 'Todas';
-
-      if (args[0] && !cat) {
-        return m.reply(`《✧》 La categoría *${args[0]}* no existe. Las categorías disponibles son: *${Object.keys(alias).join(', ')}*.\n> Para ver la lista completa escribe *${usedPrefix}menu*\n> Para ver los comandos de una categoría escribe *${usedPrefix}menu [categoría]*`);
-      }
-
-      // Construir contenido del menú
-      const content = cat ? String(menuObject[cat] || '') : Object.values(menuObject).map(s => String(s || '')).join('\n\n');
-      let menu = bodyMenu + '\n\n' + content;
-
-      // Reemplazar variables dinámicas
-      const replacements = {
-        $owner: owner ? (global.db.data.users[owner]?.name || owner.split('@')[0]) : 'Oculto',
-        $botType: botType,
-        $device: device,
-        $tiempo: tiempo,
-        $tempo: tempo,
-        $users: usersCount.toLocaleString(),
-        $link: link,
-        $cat: categoryName,
-        $sender: senderName,
-        $botname: botname,
-        $namebot: namebot,
-        $prefix: usedPrefix,
-      };
-
-      for (const [key, value] of Object.entries(replacements)) {
-        menu = menu.replace(new RegExp(`\\${key}`, 'g'), value);
-      }
-
-      // Enviar mensaje
-      await client.sendMessage(m.chat, banner.endsWith('.mp4') || banner.endsWith('.webm') ? {
-        video: { url: banner },
-        gifPlayback: true,
-        caption: menu,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: canalId,
-            serverMessageId: '',
-            newsletterName: canalName
-          }
-        }
-      } : {
-        text: menu,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: canalId,
-            serverMessageId: '',
-            newsletterName: canalName
-          },
-          externalAdReply: {
-            title: botname,
-            body: `${namebot}, By Adara`,
-            showAdAttribution: false,
-            thumbnailUrl: banner,
-            mediaType: 1,
-            previewType: 0,
-            renderLargerThumbnail: true
-          }
-        }
-      }, { quoted: m });
-
-    } catch (e) {
-      await m.reply(`> Ocurrió un error inesperado al ejecutar el comando *${usedPrefix + command}*.\n> [Error: *${e.message}*]`);
-    }
-  }
-};
+export default handler
