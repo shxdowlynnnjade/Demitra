@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import Jimp from 'jimp';
 
 export default {
-  command: ['menu', 'help', 'allmenu'], // comandos que activan el plugin
+  command: ['menu', 'help', 'allmenu'],
   category: 'main',
   description: 'Muestra el menú de comandos del bot',
   run: async (client, m, args, usedPrefix = '#') => {
@@ -21,7 +21,7 @@ export default {
       else if (hora >= 12 && hora < 18) { saludo = 'buenas tardes'; carita = '(｡•̀ᴗ-)✧ 🌸'; }
       else { saludo = 'buenas noches'; carita = '(◕‿◕✿) 🌙'; }
 
-      // Texto completo del menú
+      // Tu menú completo
       const menuTexto = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 橫㈵𓂂ㅤㅤ𓐮𝖣ۣؗ𝖤ۣؗ𝖬ۣؗ𝖨ۣؗ𝖳ۣؗ𝖱ۣؗ𝖠ㅤㅤ▞ㅤㅤ𓆭𓆭₂₈₎
 ◯◯▸ㅤㅤ⎯⎯▬𝖫ؗOVEㅤㅤ🔘ㅤㅤ ▓█
@@ -117,25 +117,25 @@ export default {
       const response = await fetch(imageUrl);
       const imageBuffer = await response.buffer();
 
-      // Crear thumbnail para el PDF
+      // Crear thumbnail para PDF
       const thumb = await Jimp.read(imageBuffer)
         .then(img => img.resize(300, 150).getBufferAsync(Jimp.MIME_JPEG))
         .catch(() => imageBuffer);
 
-      // PDF dummy solo para mostrar icono
+      // PDF dummy (solo para icono)
       const pdfBuffer = Buffer.from('%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF', 'utf-8');
 
       // Enviar mensaje con imagen + PDF
       await client.sendMessage(
         m.chat,
         {
-          image: { url: imageUrl },        // Imagen visible arriba
-          caption: menuTexto,              // Menú completo intacto
+          image: { url: imageUrl },   // Imagen arriba
+          caption: menuTexto,         // Texto intacto
           mentions: [m.sender],
-          document: pdfBuffer,             // PDF dummy para icono
-          fileName: 'Demilove.pdf',        // Nombre que se ve
-          mimetype: 'application/pdf',     // Tipo MIME
-          jpegThumbnail: thumb              // Miniatura del PDF
+          document: pdfBuffer,        // PDF dummy
+          fileName: 'Demilove.pdf',
+          mimetype: 'application/pdf',
+          jpegThumbnail: thumb         // Miniatura del PDF
         },
         { quoted: m }
       );
