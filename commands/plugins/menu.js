@@ -3,25 +3,18 @@ import Jimp from 'jimp';
 
 const handler = async (m, { conn }) => {
   try {
-    // URL de la imagen de portada
+    // Descargar imagen para thumbnail
     const imageUrl = 'https://files.catbox.moe/s3gu8x.jpg';
-
-    // Descargar la imagen y convertirla en buffer
     const response = await fetch(imageUrl);
     const buffer = await response.buffer();
-
-    // Redimensionar la imagen para thumbnail (300x150)
     const thumb = await Jimp.read(buffer)
       .then(img => img.resize(300, 150).getBufferAsync(Jimp.MIME_JPEG))
-      .catch(() => buffer); 
+      .catch(() => buffer);
 
-    // Datos dinámicos
-    const userName = '@' + m.sender.split('@')[0];
-    const botName = await conn.getName(conn.user?.id || conn.user?.jid || '');
-    const greeting = (() => {
-      const h = new Date().getHours();
-      return h < 12 ? 'Buenos días 🌅' : h < 18 ? 'Buenas tardes 🌤' : 'Buenas noches 🌙';
-    })();
+    // Datos del usuario y saludo
+    const tagUser = '@' + m.sender.split('@')[0];
+    const greeting = new Date().getHours() < 12 ? 'Buenos días 🌅' :
+                     new Date().getHours() < 18 ? 'Buenas tardes 🌤' : 'Buenas noches 🌙';
 
     const menuTexto = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 橫㈵𓂂ㅤㅤ𓐮𝖣ۣؗ𝖤ۣؗ𝖬ۣؗ𝖨ۣؗ𝖳ۣؗ𝖱ۣؗ𝖠ㅤㅤ▞ㅤㅤ𓆭𓆭₂₈₎
@@ -30,7 +23,7 @@ const handler = async (m, { conn }) => {
 
 ⟍𝄄𝄄𝄄𝄄𝄄₂₈₎ㅤㅤ 🔲ㅤㅤ#𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ⬤⬤⏋
 > ㅤㅤㅤㅤ﹫Demitra(Adara) ㅤㅤ𔘓
-
+${tagUser}
 
 ㅤ  𝗐𝖾𝗅𝖼𝗈𝗆𝖾ㅤ𝗌𝗈𝗒ㅤ𝗗᤻͟𝗲᤻͟𝗺᤻͟𝗶᤻͟𝗍᤻͟𝗋᤻͟𝗮᤻͟ㅤ𝗅𝖺ㅤ
 ㅤ     𝗌𝗈𝗇𝗋𝗂𝗌𝖺ㅤ𝗁𝖾𝖼𝗁𝖺ㅤ𝖼͟𝗈᤻͟𝖽⵿𝗂𝗀᤻͟𝗈
@@ -113,33 +106,42 @@ const handler = async (m, { conn }) => {
 ㅤㅤㅤㅤ𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤ𝗌𝗁𝖾𝗋𝗒𝗅
 ㅤ`;
 
-    // Flow interactivo con botones
-    const flowMessage = {
-      header: { documentMessage: { url: 'https://mmg.whatsapp.net/v/t62...', mimetype: 'application/pdf', fileName: 'Menu2Demitralove.pdf', jpegThumbnail: thumb } },
-      body: { text: '' },
-      footer: { text: menuTexto },
-      nativeFlowMessage: {
-        buttons: [
-          { name: 'single_select', buttonParamsJson: '{"title":"Menú Completo","sections":[{"title":"Demitrabot","rows":[{"title":"ia":".chatgpt"},{"title":"Info Bot","id":".infobot"},{"title":"Menu All","id":".allmenu"}]}]}' },
-          { name: 'cta_url', buttonParamsJson: '{"display_text":"Canal de WhatsApp","url":"https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A"}' }
-        ]
-      }
-    };
-
-    // Enviar mensaje
-    await conn.relayMessage(
+    // Mensaje tipo documento con thumbnail
+    await conn.sendMessage(
       m.chat,
-      { viewOnceMessage: { message: { interactiveMessage: flowMessage } } },
+      {
+        document: buffer, // Usamos la misma imagen como documento PDF "dummy"
+        mimetype: 'application/pdf',
+        fileName: 'archivomenuDemi.pdf',
+        caption: menuTexto,
+        jpegThumbnail: thumb,
+        contextInfo: {
+          externalAdReply: {
+            title: 'DemitraBot 🐢',
+            body: 'Menú interactivo',
+            mediaType: 1,
+            thumbnail: thumb,
+            sourceUrl: 'https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A'
+          }
+        },
+        footer: 'DEMITRA 🐦',
+        buttons: [
+          { buttonId: '.allmenu', buttonText: { displayText: 'Menú Completo' }, type: 1 },
+          { buttonId: '.infobot', buttonText: { displayText: 'Info Bot' }, type: 1 },
+          { buttonId: '.chatgpt', buttonText: { displayText: 'IA ChatGPT' }, type: 1 }
+        ]
+      },
       { quoted: m }
     );
 
   } catch (e) {
     console.error(e);
-    m.reply('❌ Ocurrió un error al generar el menú.');
+    await m.reply('❌ Ocurrió un error al generar el menú.');
   }
 };
 
-handler.help = ['menulist'];
+handler.help = ['menu'];
 handler.tags = ['main'];
-handler.command = ['mls','menulist'];
+handler.command = ['menu','help','allmenu'];
+
 export default handler;
