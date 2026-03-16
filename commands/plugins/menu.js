@@ -15,7 +15,7 @@ export default {
       const response = await fetch(imageUrl);
       const imageBuffer = await response.buffer();
 
-      // Thumbnail para preview
+      // Crear thumbnail para preview
       const thumb = await Jimp.read(imageBuffer)
         .then(img => img.resize(300, 150).getBufferAsync(Jimp.MIME_JPEG))
         .catch(() => imageBuffer);
@@ -27,18 +27,18 @@ export default {
       // Texto del menú
       const menuTexto = `Hola @${m.sender.split('@')[0]}, ${saludo}!\nBienvenid@ a DemitraBot 🌸\n\nAquí están mis comandos principales: ...`;
 
-      // Crear PDF "dummy" como buffer para mostrar icono PDF
+      // PDF "dummy" como buffer para WhatsApp
       const pdfBuffer = Buffer.from('%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF', 'utf-8');
 
-      // Enviar mensaje con imagen + PDF preview
+      // Enviar mensaje con PDF preview y sin botones
       await client.sendMessage(
         m.chat,
         {
-          document: pdfBuffer,          // archivo PDF "dummy"
-          fileName: 'Demilove.pdf',     // nombre que se ve
-          mimetype: 'application/pdf',  // tipo MIME para WhatsApp
+          document: pdfBuffer,          // PDF "dummy"
+          fileName: 'Demilove.pdf',     // nombre que verá el usuario
+          mimetype: 'application/pdf',  // tipo MIME
           caption: menuTexto,           // texto del menú
-          jpegThumbnail: thumb,         // preview del PDF
+          jpegThumbnail: thumb,         // miniatura del PDF
           mentions: [m.sender],         // mención al usuario
           contextInfo: {
             externalAdReply: {
@@ -48,12 +48,7 @@ export default {
               thumbnail: thumb,
               sourceUrl: 'https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A'
             }
-          },
-          buttons: [
-            { buttonId: '.allmenu', buttonText: { displayText: 'Menú Completo' }, type: 1 },
-            { buttonId: '.infobot', buttonText: { displayText: 'Info Bot' }, type: 1 },
-            { buttonId: '.chatgpt', buttonText: { displayText: 'IA ChatGPT' }, type: 1 }
-          ]
+          }
         },
         { quoted: m }
       );
