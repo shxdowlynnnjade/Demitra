@@ -1,7 +1,7 @@
 // commands/plugins/menu.js
 export default {
-  command: ['menu', 'help', 'allmenu'],
-  category: 'main',
+  command: ['menu', 'help', 'allmenu'], // comandos que activan este plugin
+  category: 'main',                     // categoría para organizar
   description: 'Muestra el menú de comandos del bot',
   run: async (client, m, args, usedPrefix = '#') => {
     try {
@@ -106,26 +106,14 @@ export default {
 .apk/aptoide/apkdl
 .imagen/img/image(Google imágenes)
 
-> © 2026 creado por Jade.`;
+> © 2026 creado por Jade.
+https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A`;
 
-      // Botón que abre tu canal
-      const buttons = [
-        {
-          index: 1,
-          urlButton: {
-            displayText: '📺 Canal',
-            url: 'https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A'
-          }
-        }
-      ];
-
-      const buttonMessage = {
+      // Enviar mensaje simple (texto)
+      await client.sendMessage(m.chat, {
         text: menuTexto,
-        footer: 'Zero Two 💗',
-        templateButtons: buttons
-      };
-
-      await client.sendMessage(m.chat, buttonMessage, { quoted: m });
+        mentions: [m.sender],
+      }, { quoted: m });
 
     } catch (e) {
       console.error('Error en plugin menu.js:', e);
