@@ -8,7 +8,7 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     try {
       if (!args[0]) return client.reply(m.chat, '「✦」Por favor, proporciona un enlace válido de Instagram.', m)
-      if (!args[0].match(/instagram\.com\/(p|reel|share|tv|stories)\//)) {
+      if (!args[0].match(/instagram\.com\/(p|reel|tv|stories)\//)) {
         return client.reply(m.chat, '「✦」El enlace no parece válido. Asegúrate de que sea de Instagram.', m)
       }
 
@@ -20,18 +20,18 @@ export default {
       const caption = `
 Título: ${data.title || 'Desconocido'}
 Descripción: ${data.caption || 'Sin descripción'}
-Likes: ${data.like || 0}
-Vistas: ${data.views || 0}
-Comentarios: ${data.comment || 0}
-Duración: ${data.duration || 'Desconocido'}
 Link: ${args[0]}
       `.trim()
 
       if (data.type === 'video') {
-        // Descarga el video como buffer
-        const videoBuffer = await fetch(data.url)
-          .then(res => res.arrayBuffer())
-          .then(Buffer.from)
+        // DESCARGAR EL VIDEO COMO BUFFER
+        const videoRes = await fetch(data.url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0', // Instagram a veces bloquea requests sin UA
+            'Referer': 'https://www.instagram.com/'
+          }
+        })
+        const videoBuffer = Buffer.from(await videoRes.arrayBuffer())
 
         await client.sendMessage(
           m.chat,
@@ -61,17 +61,9 @@ Link: ${args[0]}
   }
 }
 
-// Función para obtener media de varias APIs
+// Función para obtener media de APIs confiables
 async function getInstagramMedia(url) {
   const apis = [
-    {
-      endpoint: `${global.APIs.vreden.url}/api/igdownload?url=${encodeURIComponent(url)}`,
-      extractor: res => {
-        if (!res.resultado?.respuesta?.datos?.length) return null
-        const mediaUrl = res.resultado.respuesta.datos[0].url
-        return { type: 'video', url: mediaUrl } // vreden devuelve solo videos
-      }
-    },
     {
       endpoint: `${global.APIs.delirius.url}/download/instagram?url=${encodeURIComponent(url)}`,
       extractor: res => {
