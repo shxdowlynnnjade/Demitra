@@ -30,7 +30,7 @@ export default {
         {
           document: buffer, // usamos la misma imagen como PDF dummy
           mimetype: 'application/pdf',
-          fileName: 'Demilove.pdf',
+          fileName: 'archivomenudemi.pdf',
           caption: menuTexto,
           jpegThumbnail: thumb,
           contextInfo: {
