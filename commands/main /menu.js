@@ -94,7 +94,7 @@ export default {
               },
               externalAdReply: {
                 title: botname,
-                body: `${namebot}, Build With By Angelithoxyz `,
+                body: `${namebot},By Adara `,
                 showAdAttribution: false,
                 thumbnailUrl: banner,
                 mediaType: 1,
