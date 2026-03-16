@@ -4,10 +4,10 @@ import fs from 'fs'
 import PhoneNumber from 'awesome-phonenumber'
 import moment from 'moment-timezone'
 
-const botname = global.botname || "Shadow Garden"
-const dev = global.dev || "Cid Kagenou"
-const banner = global.banner || "https://adofiles.i11.eu/dl/kmbh.jpg"
-const channelRD = global.channelRD || { id: "0@newsletter", name: "Shadow Channel" }
+const botname = global.botname || "DEMITRA"
+const dev = global.dev || "Kalogeras"
+const banner = global.banner || "https://adofiles.i11.eu/dl/oufl.jpg"
+const channelRD = global.channelRD || { id: "0@newsletter", name: "DEMITRA Channel" }
 
 let handler = async (m, { conn, usedPrefix, __dirname, participants }) => {
   try {
@@ -29,30 +29,24 @@ let handler = async (m, { conn, usedPrefix, __dirname, participants }) => {
 
     let userIdNum = m.sender.split('@')[0]
     let phone = PhoneNumber('+' + userIdNum)
-    let pais = phone.getRegionCode() || 'Dominio Desconocido 🌑'
+    let pais = phone.getRegionCode() || 'Desconocido🐢'
 
     let tags = {
-      'info': '𝐈𝐍𝐅𝐎 𝐃𝐄 𝐋𝐀 𝐒𝐎𝐌𝐁𝐑𝐀',
-      'main': '𝐄𝐒𝐓𝐀𝐃𝐎 𝐃𝐄𝐋 𝐂𝐎𝐑𝐓𝐈𝐆𝐎',
-      'anime': '𝐀𝐍𝐈𝐌𝐄 𝐀𝐑𝐂𝐀𝐍𝐎',
-      'menu': '𝐌𝐄𝐍𝐔𝐒 𝐎𝐂𝐔𝐋𝐓𝐎𝐒',
-      'search': '𝐁𝐔𝐒𝐐𝐔𝐄𝐃𝐀𝐒 𝐄𝐒𝐎𝐓𝐄𝐑𝐈𝐂𝐀𝐒',
-      'descargas': '𝐃𝐄𝐒𝐂𝐀𝐑𝐆𝐀𝐒 𝐃𝐄 𝐋𝐀 𝐒𝐎𝐌𝐁𝐑𝐀',
-      'socket': '𝐂𝐎𝐍𝐄𝐗𝐈𝐎𝐍𝐄𝐒 𝐎𝐂𝐔𝐋𝐓𝐀𝐒',
-      'rg': '𝐏𝐄𝐑𝐅𝐈𝐋 𝐃𝐄𝐋 𝐂𝐎𝐍𝐓𝐑𝐀𝐓𝐈𝐒𝐓𝐀',
-      'fun': '𝐉𝐔𝐄𝐆𝐎𝐒 𝐃𝐄 𝐒𝐎𝐌𝐁𝐑𝐀',
-      'rpg': '𝐄𝐂𝐎𝐍𝐎𝐌𝐈𝐀 𝐎𝐂𝐔𝐋𝐓𝐀',
-      'gacha': '𝐈𝐕𝐄𝐍𝐓𝐎𝐒 𝐆𝐀𝐂𝐇𝐀',
-      'game': '𝐉𝐔𝐄𝐆𝐎𝐒 𝐀𝐑𝐂𝐀𝐍𝐎𝐒',
-      'grupos': '𝐂𝐈𝐑𝐂𝐔𝐋𝐎𝐒 𝐃𝐄 𝐒𝐎𝐌𝐁𝐑𝐀',
-      'nable': '𝐌𝐎𝐃𝐎 𝐎𝐍 / 𝐎𝐅𝐅',
-      'ia': '𝐈𝐍𝐓𝐄𝐋𝐈𝐆𝐄𝐍𝐂𝐈𝐀 𝐀𝐑𝐂𝐀𝐍𝐀',
-      'stalk': '𝐎𝐁𝐒𝐄𝐑𝐕𝐀𝐂𝐈𝐎𝐍 𝐒𝐈𝐋𝐄𝐍𝐂𝐈𝐎𝐒𝐀',
-      'maker': '𝐀𝐋𝐐𝐔𝐈𝐌𝐈𝐀 𝐕𝐈𝐒𝐔𝐀𝐋',
-      'tools': '𝐇𝐄𝐑𝐑𝐀𝐌𝐈𝐄𝐍𝐓𝐀𝐒 𝐃𝐄 𝐋𝐀 𝐒𝐎𝐌𝐁𝐑𝐀',
-      'sticker': '𝐒𝐄𝐋𝐋𝐎𝐒 𝐀𝐑𝐂𝐀𝐍𝐎𝐒',
-      'owner': '𝐌𝐀𝐄𝐒𝐓𝐑𝐎 𝐃𝐄 𝐋𝐀 𝐎𝐑𝐆𝐀𝐍𝐈𝐙𝐀𝐂𝐈𝐎𝐍',
-      'nsfw': '𝐙𝐎𝐍𝐀 𝐑𝐄𝐒𝐓𝐑𝐈𝐍𝐆𝐈𝐃𝐀 (+18)'
+      'info': 'Info de demi 🐢',
+      'main': 'Estado crazy',
+      'menu': 'Mis datos',
+      'search': 'Búsquedas',
+      'descargas': 'descargas',
+      'socket': 'Conexiónes aburrido.',
+      'rg': 'Perfilll.',
+      'fun': 'juegos happy',
+      'rpg': 'Economía lol. ',
+      'game': 'Fin de mi aburrimiento',
+      'grupos': 'Lugar favorito',
+      'nable': 'Modo on/off',
+      'ia': 'Inteligencia, Gracias a Dios', 
+      'sticker': 'Personalidad',
+      'owner': 'Linda Adaara. Creadora mia'
     }
 
     let commands = Object.values(global.plugins)
@@ -66,10 +60,10 @@ let handler = async (m, { conn, usedPrefix, __dirname, participants }) => {
     for (let tag in tags) {
       let comandos = commands
         .filter(cmd => cmd.tags.includes(tag))
-        .map(cmd => cmd.help.map(e => `*│ׄꤥㅤׅ*  ${usedPrefix}${e}`).join('\n'))
+        .map(cmd => cmd.help.map(e => `*໒꒰՞ ܸ. .ܸ՞꒱ა     ۪    ׂ*  ${usedPrefix}${e}`).join('\n'))
         .join('\n')
       if (comandos) {
-        menuTexto += `\n*╭──･ ̸̷∵* \`${tags[tag]}\`  *݁ ⚜︎*
+        menuTexto += `\n*╭──･ ̸̷∵* \`${tags[tag]}\`  *݁ 🐢*
 ${comandos}
 *╰─────────────֙╯*\n`
       }
@@ -77,21 +71,90 @@ ${comandos}
 
     let date = `${dia}, ${fechaTxt}, ${hora}`
     let infoUser = `
-> . ݁  🌑՞ *ʙɪᴇɴᴠᴇɴɪᴅᴏ ᴀ ʟᴀ ꜱᴏᴍʙʀᴀ,* ${name}.
->    ʏᴀ ᴇꜱᴛᴀʙᴀ ᴇꜱᴄᴜᴄhᴀɴᴅᴏ ᴛᴜꜱ ᴘᴀꜱᴏꜱ...
+░▒ㅤ🌸ㅤ＃𝖲𝖧𝖷𝖣𝖮𝖶𝖫YNㅤㅤ＞ㅤ                                       ૮₍´ ˶ ｪ ˵ ₎ა                            〘ㅤ☆ㅤ〙
 
-> ﹙⚜︎﹚੭੭ ─ \`ɪ ɴ ғ ᴏ - ꜱʜᴀᴅᴏᴡ ʙᴏᴛ\`
-> ര ׄ 𓏸𓈒 ׅ *ɴᴏᴍʙʀᴇ ᴄʟᴀᴠᴇ ›* ${conn.user?.name || 'Shadow Unit'}
-> ര ׄ 𓏸𓈒 ׅ *ᴄʟᴀꜱɪꜰɪᴄᴀᴄɪᴏɴ ›* ${(conn.user.jid == global.conn.user.jid ? '𝐍𝐮́𝐜𝐥𝐞𝐨 𝐏𝐫𝐢𝐧𝐜𝐢𝐩𝐚𝐥' : '𝐔𝐧𝐢𝐝𝐚𝐝 𝐒𝐮𝐛𝐨𝐫𝐝𝐢𝐧𝐚𝐝𝐚')}
-> ര ׄ 𓏸𓈒 ׅ *ᴄᴏᴍᴀɴᴅᴏꜱ ›* ${totalCommands}
-> ര ׄ 𓏸𓈒 ׅ *ᴛɪᴇᴍᴘᴏ ᴇɴ ʟᴀ ꜱᴏᴍʙʀᴀ ›* ${uptime}
-> ര ׄ 𓏸𓈒 ׅ *ᴅᴏᴍɪɴɪᴏ ›* ${pais}
-> ര ׄ 𓏸𓈒 ׅ *ᴀʟᴍᴀꜱ ›* ${totalreg}
-> ര ׄ 𓏸𓈒 ׅ *ᴄᴇʟᴅᴀꜱ ›* ${groupsCount}
-> ര ׄ 𓏸𓈒 ׅ *ᴛɪᴇᴍᴘᴏ ›* ${date}
+                        𝐂𝐫𝐞𝐚𝐝𝐨𝐫 :: 
+> ㅤㅤ    @Demitra(adara)
+
+꒰ㅤ۪ㅤֺㅤ🪼੭ㅤ꧇ㅤBuenas tardes. Soy Demi, la sonrisa hecha código.
+
+꒰  👾 ꧇ㅤLe muestro mis comandos. Ordenados y afilados.
+
+
+        ࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛   ୨୧  ࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛࿙⃛͜࿚⃛
+
+
+> ㅤㅤ⧼ㅤ Principalㅤ⧽ㅤ🫐❝
+.reg
+.menu/help/menú/allmenu
+.infobot/infosocket
+.status/estado
+.report/reporte/sug/suggest
+
+
+
+> ㅤㅤ⧼ㅤ Set perfil?+ㅤ⧽ㅤ🪼❝
+.profile/perfil
+.setdescription/setdesc
+.setpasatiempo
+.sethobby
+.setgenre (hombre/mujer) 
+.marry/casarse @usuario
+.divorce
+.delpasatiempo
+.delgenre
+.removehobby
+.level/lvl
+.afk (estudiando, durmiendo, etc?) 
+
+> ㅤㅤ⧼ㅤ Grupo+ㅤ⧽ㅤ🍥❝
+.invite/invitar 
+.hidetag/tag
+.kick
+.todos/invocar/tagall
+.join link/unir link
+
+> ㅤㅤ⧼ㅤ Stickers+ㅤ⧽ㅤ🪼❝
+.bratt/brat texto
+.bratv
+.emojimix (Stickers emoji 😂+🪻)
+.qc texto (Stickers)
+.sticker/s
+
+> ㅤㅤ⧼ㅤ extras+ㅤ⧽ㅤ🍥❝
+.self
+.logout (subbapagado) 
+.reload (prendido) 
+.qrs/codes
+.pfp/getpic (fotos de perfil) 
+.lboard/lb/leaderboard (Ordena usuarios por experiencia total.)
+.hd/enhance/remini(Mejora calidad)
+.inspect/inspeccionar (Funciona para tener info del grupo)
+.readviewonce/read/rreadv/ver
+.say/decir (Reenvía.)
+.toimg /toimage (sticker a imagen)
+.tourl (Convierte en url) 
+
+> ㅤㅤ⧼ㅤ Mas+ㅤ⧽ㅤ🪷❝
+.translate/trad/traducir (Traduce) 
+.ia/chatgpt
+
+> ㅤㅤ⧼ㅤ Descargas+ㅤ⧽ㅤ🐢❝
+
+.ytsearch/search (búsqueda en youtube) 
+.play2/mp4/ytmp4/ytvideo/playvideo (videos descargados) 
+.play/mp3/ytmp3 /ytaudio/playaudio (Música audio)
+.tiktok / tt / tiktoksearch / ttsearch / tts (descarga y búsqueda) 
+.pinterest/pin (busqueda) 
+.instagram/ig
+.mediafire/mf
+.apk/aptoide/apkdl
+.imagen/img/image(Google imágenes)
+
+> © 2026 creado por Jade.
 
 ${readMore}
-  乂 *ᴘʀᴏᴛᴏᴄᴏʟᴏ ᴅᴇ ᴄᴏᴍᴀɴᴅᴏꜱ ᴅᴇ ʟᴀ ꜱᴏᴍʙʀᴀ* 乂\n`.trim()
+  🐢 *Simples comandos* 🔘\n`.trim()
 
 
    const icon = [
@@ -114,8 +177,8 @@ ${readMore}
             mimetype: "image/jpeg",
             jpegThumbnail: Shadow_url
           },
-          title: `⌗ֶㅤ𝐌𝐞𝐧𝐮 𝐝𝐞 𝐥𝐚 𝐒𝐨𝐦𝐛𝐫𝐚 - ${botname} 𝅄⚜︎`,
-          description: "« Soy quien actúa en las sombras, fingiendo ser un simple extra. »",
+          title: `> 𓈒    ׂ   🔮੭       ᮫  MENU DEMITRA ${botname} 🐢`,
+          description: "« Soy yo loko,DEMITRA , fingiendo ser un simple extra. »",
           currencyCode: "USD",
           priceAmount1000: 0,
           retailerId: "menu"
@@ -136,8 +199,8 @@ contextInfo: {
    newsletterName: channelRD.name
  },
  externalAdReply: {
-   title: `${botname} ┊ Organización en las Sombras`,
-   body: `Dirigido por ${dev}, el que juega a ser un simple mob.`,
+   title: `${botname} ┊ Organización loko`,
+   body: `Dirigido por ${dev}.`,
    mediaType: 1,
    mediaUrl: null,
    sourceUrl: null,
@@ -150,7 +213,7 @@ contextInfo: {
 } catch (e) {
    console.error(e)
    await conn.sendMessage(m.chat, { 
-     text: `✘ Un fallo ha surgido entre las sombras: ${e.message}`,
+     text: `🗣️ Un fallo ha surgido loko: ${e.message}`,
      mentionedJid: [mentionedJid]
    })
  }
@@ -171,14 +234,14 @@ function clockString(ms) {
 
 function ucapan() {
   const time = moment.tz('America/Lima').format('HH')
-  let res = "🄱ᴜᴇɴᴀs ɴᴏᴄʜᴇs ᴅᴇ ʟᴀ ꜱᴏᴍʙʀᴀ"
+  let res = "𝗕𝗎𝖾𝗇𝖺𝗌 𝗡𝗈𝖼𝗁𝖾𝗌, 𝗗𝖾𝗌𝖼𝖺𝗇𝗌𝖺."
 
   if (time >= 5 && time < 12)
-    res = "🄱ᴜᴇɴᴏꜱ ᴅɪᴀꜱ, ᴇxᴛʀᴀ ᴅᴇ ʟᴀ ʜɪꜱᴛᴏʀɪᴀ"
+    res = "𝗕𝗎𝖾𝗇𝗈𝗌 𝗗𝗂𝖺𝗌, ¿𝖢𝗈𝗆𝗈 𝖾𝗌𝗍𝖺𝗌? "
   else if (time >= 12 && time < 18)
-    res = "🄱ᴜᴇɴᴀꜱ ᴛᴀʀᴅᴇꜱ, ᴀᴄᴛᴏʀ ᴅᴇ ꜱᴏᴍʙʀᴀ"
+    res = "𝗕𝗎𝖾𝗇𝖺𝗌 𝗧𝖺𝗋𝖽𝖾𝗌, ¿𝖰𝗎𝖾 𝗈𝗇𝖽𝖺? "
   else if (time >= 18)
-    res = "🄱ᴜᴇɴᴀꜱ ɴᴏᴄʜᴇꜱ, ʟᴀ ᴏʙꜱᴄᴜʀɪᴅᴀᴅ ᴛᴇ ᴄᴜʙʀᴇ"
+    res = "𝗕𝗎𝖾𝗇𝖺𝗌 𝗡𝗈𝖼𝗁𝖾𝗌, ¿𝖼𝗈𝗆𝗈 𝖾𝗌𝗍𝗎𝗏𝗈 𝗍𝗎 𝖽𝗂́𝖺? 𝖣𝖾𝗌𝖼𝖺𝗇𝗌𝖺."
 
   return res
                          }
