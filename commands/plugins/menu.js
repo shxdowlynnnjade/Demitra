@@ -17,19 +17,18 @@ export default {
         .then(img => img.resize(300, 150).getBufferAsync(Jimp.MIME_JPEG))
         .catch(() => imageBuffer);
 
-      // Texto del menú
+      // Datos del usuario y saludo
       const tagUser = '@' + m.sender.split('@')[0];
       const hour = new Date().getHours();
       const greeting = hour < 12 ? 'Buenos días 🌅' : hour < 18 ? 'Buenas tardes 🌤' : 'Buenas noches 🌙';
-      const menuTexto = `Hola ${tagUser}, ${greeting}!\nBienvenid@ a DemitraBot 🌸`;
 
-      // Enviar mensaje con la imagen como documento “dummy” para WhatsApp
+      const menuTexto = `Hola ${tagUser}, ${greeting}!\nBienvenid@ a DemitraBot 🌸\n\nSelecciona una opción:`;
+
+      // Enviar mensaje con botones y thumbnail
       await client.sendMessage(
         m.chat,
         {
-          document: imageBuffer,
-          mimetype: 'image/jpeg',
-          fileName: 'Demilove.jpg',
+          image: imageBuffer,
           caption: menuTexto,
           jpegThumbnail: thumb,
           mentions: [m.sender],
@@ -55,3 +54,5 @@ export default {
       console.error('Error en plugin menu.js:', e);
       await m.reply('❌ Ocurrió un error al generar el menú.');
     }
+  }
+};
