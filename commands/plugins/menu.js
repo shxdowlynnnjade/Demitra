@@ -2,33 +2,33 @@ import fetch from 'node-fetch';
 import Jimp from 'jimp';
 
 export default {
-  command: ['menu', 'help', 'allmenu'], // Comandos que activan este plugin
+  command: ['menu', 'help', 'allmenu'], // comandos que activan este plugin
   category: 'main',
   description: 'Muestra el menú de comandos del bot',
-  run: async (client, m, usedPrefix = '#') => {
+  run: async (client, m, args, usedPrefix = '#') => {
     try {
-      // Descargar imagen de portada
+      // 1️⃣ Descargar imagen de portada
       const imageUrl = 'https://files.catbox.moe/s3gu8x.jpg';
       const response = await fetch(imageUrl);
-      const buffer = await response.buffer();
+      const imageBuffer = await response.buffer();
 
-      // Crear thumbnail (300x150)
-      const thumb = await Jimp.read(buffer)
+      // 2️⃣ Crear thumbnail 300x150
+      const thumb = await Jimp.read(imageBuffer)
         .then(img => img.resize(300, 150).getBufferAsync(Jimp.MIME_JPEG))
-        .catch(() => buffer); // fallback en caso de error
+        .catch(() => imageBuffer);
 
-      // Datos dinámicos del usuario
-      const tagUser = '@' + m.sender.split('@')[0];
+      // 3️⃣ Datos dinámicos
+      const tagUser = '@' + (m.pushName || m.sender.split('@')[0]);
       const hour = new Date().getHours();
       const greeting = hour < 12 ? 'Buenos días 🌅' : hour < 18 ? 'Buenas tardes 🌤' : 'Buenas noches 🌙';
 
-      const menuTexto = `Hola ${tagUser}, ${greeting}!\nBienvenid@ a DemitraBot 🌸`;
+      const menuTexto = `Hola ${tagUser}, ${greeting}!\nBienvenid@ a DemitraBot 🌸\n\nUsa los botones para navegar por el menú`;
 
-      // Enviar mensaje tipo documento con thumbnail + botones
+      // 4️⃣ Mensaje con botones y thumbnail
       await client.sendMessage(
         m.chat,
         {
-          document: buffer, // se envía la misma imagen como "documento dummy"
+          document: imageBuffer,          // imagen como documento "dummy" para WhatsApp
           mimetype: 'image/jpeg',
           fileName: 'Demilove.jpg',
           caption: menuTexto,
@@ -52,8 +52,10 @@ export default {
         { quoted: m }
       );
 
+      console.log('✅ Plugin menu.js activado por:', m.sender);
+
     } catch (e) {
-      console.error('Error en plugin menu.js:', e);
+      console.error('❌ Error en plugin menu.js:', e);
       await m.reply('❌ Ocurrió un error al generar el menú.');
     }
   }
