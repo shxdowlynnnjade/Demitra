@@ -7,11 +7,13 @@ export default {
   category: 'info',
   run: async (client, m, args, usedPrefix, command) => {
     try {
+      // Hora local
       const now = new Date();
       const colombianTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Caracas' }));
       const tiempo = colombianTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/,/g, '');
       const tempo = moment.tz('America/Caracas').format('hh:mm A');
 
+      // Info del bot
       const botId = client?.user?.id.split(':')[0] + '@s.whatsapp.net';
       const botSettings = global.db.data.settings[botId] || {};
       const botname = botSettings.botname || '';
@@ -20,15 +22,16 @@ export default {
       const owner = botSettings.owner || '';
       const canalId = botSettings.id || '';
       const canalName = botSettings.nameid || '';
-
       const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net';
       const botType = isOficialBot ? 'Principal/Owner' : 'Sub Bot';
+
+      // Info de usuarios
       const users = Object.keys(global.db.data.users).length;
       const device = getDevice(m.key.id);
       const sender = global.db.data.users[m.sender].name;
       const uptime = client.uptime ? formatearMs(Date.now() - client.uptime) : "Desconocido";
 
-      // Reemplazos de variables dentro de tu bodyMenu
+      // Prepara menú con reemplazos
       let menu = bodyMenu;
       const replacements = {
         $owner: owner || 'Oculto por privacidad',
@@ -48,7 +51,7 @@ export default {
       }
 
       // Enviar mensaje
-      await client.sendMessage(m.chat, banner.includes('.mp4') || banner.includes('.webm') ? {
+      await client.sendMessage(m.chat, banner?.endsWith('.mp4') || banner?.endsWith('.webm') ? {
         video: { url: banner },
         gifPlayback: true,
         caption: menu,
