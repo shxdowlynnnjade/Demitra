@@ -7,35 +7,20 @@ category: 'downloads',
 run: async (client, m, args) => {
 
 if (!args[0]) return m.reply('Envíe un enlace de Instagram.')
-if (!args[0].includes('instagram.com')) return m.reply('El enlace no es válido.')
+if (!args[0].includes('instagram.com')) return m.reply('Link inválido.')
 
 try {
 
-let video = null
+let api = `https://api.ryzendesu.vip/api/downloader/igdl?url=${encodeURIComponent(args[0])}`
 
-// API 1
-try {
-let r = await fetch(`https://api.delirius.xyz/download/instagram?url=${encodeURIComponent(args[0])}`)
-let j = await r.json()
-if (j.status && j.data?.length) {
-video = j.data[0].url
-}
-} catch {}
+let res = await fetch(api)
+let json = await res.json()
 
-// API 2 (respaldo)
-if (!video) {
-try {
-let r = await fetch(`https://api.nekolabs.my.id/downloader/instagram?url=${encodeURIComponent(args[0])}`)
-let j = await r.json()
-if (j.success && j.result?.downloadUrl?.length) {
-video = j.result.downloadUrl[0]
-}
-} catch {}
-}
-
-if (!video) {
+if (!json.status) {
 return m.reply('No se pudo obtener el video.')
 }
+
+let video = json.data[0].url
 
 await client.sendMessage(
 m.chat,
@@ -49,7 +34,7 @@ caption: 'Video descargado de Instagram'
 
 } catch (e) {
 console.log(e)
-m.reply('Error al descargar el contenido.')
+m.reply('Error al descargar el video.')
 }
 
 }
