@@ -30,13 +30,39 @@ export default {
           thumbBuffer = await getBuffer(videoInfo.image)
           const vistas = (videoInfo.views || 0).toLocaleString()
           const canal = videoInfo.author?.name || 'Desconocido'
-          const infoMessage = `➩ Descargando › ${title}
+          const infoMessage = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
+▙▅▚ㅤㅤ⇲DEMITRAㅤㅤ⦙⦙⦙◗ㅤㅤ𓂧⁸⁶
+𐇡𐇡 ㅤㅤ ㏩𓄼ㅤㅤ◢𝖫OVEㅤㅤ 🔲ㅤㅤ⬤⬤
 
-> ❖ Canal › *${canal}*
-> ⴵ Duración › *${videoInfo.timestamp || 'Desconocido'}*
-> ❀ Vistas › *${vistas}*
-> ✩ Publicado › *${videoInfo.ago || 'Desconocido'}*
-> ❒ Enlace › *${url}*`
+
+ㅤㅤㅤ `ㅤ𝗍𝗎   𝖼𝖺𝗇𝖼𝗂𝗈𝗇   𝗌𝖾ㅤ`
+ㅤㅤㅤ `ㅤ𝖾𝗌𝗍𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈.ㅤ`
+
+
+＿＿／ ㅤㅤ𓐮𝖳𝖨𝖳𝖴𝖫𝖮ㅤㅤ🔘ㅤㅤ ◥
+> ${title}.
+
+＿＿／ ㅤㅤ𓐮𝖳𝖨𝖤𝖬𝖯𝖮ㅤ   🔘   ㅤ ◥
+> ${videoInfo.timestamp || 'Desconocido'}*.
+
+＿＿／ ㅤㅤ𓐮𝖵𝖨𝖲𝖳𝖠𝖲ㅤㅤ🔘ㅤㅤ ◥
+> *${vistas}*.
+
+＿＿／ ㅤㅤ𓐮PUBLICADOㅤㅤ🔘ㅤㅤ ◥
+> ${videoInfo.ago || 'Desconocido'}*.
+
+＿＿／ ㅤㅤ𓐮𝖤𝖭𝖫𝖠𝖢𝖤ㅤㅤ🔘ㅤㅤ◥
+> *${url}*.
+
+
+＿＿／⬤ㅤㅤ 𝖲𝖤𝖱𝖵𝖤𝖱 ㅤㅤ[橫㦥]
+
+
+>𝖤𝖭𝖵𝖨𝖠𝖣𝖮 / 𝖤𝖭𝖵𝖨𝖠𝖭𝖣𝖮 / 𝖫𝖫𝖤𝖦𝖠𝖣𝖮<
+
+
+ㅤㅤ      𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤ𝗌𝗁𝖾𝗋𝗒𝗅
+ㅤ`
           await client.sendMessage(m.chat, { image: thumbBuffer, caption: infoMessage }, { quoted: m })
         }
       } catch (err) {
