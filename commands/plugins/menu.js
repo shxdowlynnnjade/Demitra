@@ -1,46 +1,40 @@
 import fetch from 'node-fetch';
-import Jimp from 'jimp';
 
 export default {
   command: ['menu','help','allmenu'],
-  tags: ['main'],
-  description: 'Muestra el menú interactivo del bot',
-  run: async (m, { conn }) => {
+  category: 'main',
+  description: 'Muestra el menú de comandos del bot',
+  run: async (client, m) => {
     try {
-      // Descargar imagen y generar thumbnail
+      const botname = global.botname || 'DemitraBot';
+      const senderName = m.pushName || 'amig@';
+
+      // Descargar la imagen de portada
       const imageUrl = 'https://files.catbox.moe/s3gu8x.jpg';
       const response = await fetch(imageUrl);
       const buffer = await response.buffer();
-      const thumb = await Jimp.read(buffer)
-        .then(img => img.resize(300, 150).getBufferAsync(Jimp.MIME_JPEG))
-        .catch(() => buffer);
+      const base64 = buffer.toString('base64'); // para thumbnail
 
-      // Datos dinámicos
-      const tagUser = '@' + m.sender.split('@')[0];
-      const botName = await conn.getName(conn.user?.id || conn.user?.jid || '');
-      const greeting = (() => {
-        const h = new Date().getHours();
-        return h < 12 ? 'Buenos días 🌅' : h < 18 ? 'Buenas tardes 🌤' : 'Buenas noches 🌙';
-      })();
+      // Texto del menú
+      const menuTexto = `Hola @${m.sender.split('@')[0]}, bienvenid@ a *${botname}* 🌸
+Aquí tienes tu menú de comandos:`; 
 
-      const menuTexto = `Hola ${tagUser}, ${greeting}!\nAquí está tu menú de comandos de *${botName}*.`;
-
-      // Enviar mensaje tipo documento con thumbnail y botones
-      await conn.sendMessage(
+      // Enviar mensaje tipo "documento" con preview y botón opcional
+      await client.sendMessage(
         m.chat,
         {
           document: buffer,
           mimetype: 'application/pdf',
-          fileName: 'archivomenudemi.pdf',
+          fileName: 'archivomenudemilove.pdf',
           caption: menuTexto,
-          jpegThumbnail: thumb,
-          footer: 'DemitraBot 🌸',
+          mentions: [m.sender],
           contextInfo: {
             externalAdReply: {
-              title: 'DemitraBot 🌸',
-              body: 'Menú interactivo',
+              title: botname,
+              body: 'Menú interactivo 🌸',
               mediaType: 1,
-              thumbnail: thumb,
+              thumbnail: base64,
+              renderLargerThumbnail: true,
               sourceUrl: 'https://whatsapp.com/channel/0029VbBvrmwC1Fu5SYpbBE2A'
             }
           },
@@ -54,8 +48,8 @@ export default {
       );
 
     } catch (e) {
-      console.error('Error en comando menu:', e);
-      await m.reply('❌ Ocurrió un error al generar el menú.');
+      console.error('Error en plugin menu.js:', e);
+      m.reply('❌ Ocurrió un error al generar el menú, intenta de nuevo.');
     }
   }
 };
