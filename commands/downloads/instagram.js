@@ -13,40 +13,40 @@ export default {
     try {
       const data = await getInstagramMedia(args[0])
       if (!data) return m.reply('《✧》 No se pudo obtener el contenido.')
-            const caption =
-        `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
+            const caption = `ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 ▙▅▚ㅤㅤ⇲DEMITRAㅤㅤ⦙⦙⦙◗ㅤㅤ𓂧⁸⁶
 𐇡𐇡 ㅤㅤ ㏩𓄼ㅤㅤ◢𝖫OVEㅤㅤ 🔲ㅤㅤ⬤⬤
 
-ㅤㅤㅤ `ㅤ𝗍𝗎   𝖼𝖺𝗇𝖼𝗂𝗈𝗇   𝗌𝖾ㅤ`
+ㅤㅤㅤ `ㅤ𝗍𝗎   video   𝗌𝖾ㅤ`
 ㅤㅤㅤ `ㅤ𝖾𝗌𝗍𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈.ㅤ`
 
 ＿＿／ ㅤㅤ𓐮𝖳𝖨𝖳𝖴𝖫𝖮ㅤㅤ🍡ㅤㅤ ◥
-> ${title || 'Desconocido'}.
+> ${title}.
 
 ＿＿／ ㅤㅤ𓐮𝖣𝖤𝖲𝖢𝖱𝖨𝖯𝖢𝖨𝖮́𝖭ㅤㅤㅤ ◥
-> ${description || 'Sin descripción'}.
+> ${description}.
 
 ＿＿／ ㅤㅤ𓐮𝖫𝗂𝗄𝖾𝗌ㅤㅤ💜ㅤㅤ ◥
-> ${likes || 0}.
+> ${likes}.
 
 ＿＿／ ㅤㅤ𓐮𝖵𝖨𝖲𝖳𝖠𝖲ㅤㅤㅤㅤ ◥
-> ${views || 0}.
+> ${views}.
 
 ＿＿／ ㅤㅤ𓐮𝖢𝖮𝖬𝖤𝖭𝖳𝖠𝖱𝖨𝗈𝗌ㅤㅤㅤ🪼ㅤ ◥
-> ${comments || 0}.
+> ${comments}.
 
 ＿＿／ ㅤㅤ𓐮𝖣𝖴𝖱𝖠𝖢𝖨𝖮́𝖭ㅤㅤㅤㅤ ◥
-> ${duration || 'Desconocido'}.
+> ${duration}.
 
 ＿＿／ ㅤㅤ𓐮𝖤𝖭𝖫𝖠𝖢𝖤ㅤㅤ🐢ㅤㅤ◥
-> ${url || 'No disponible'}.
+> ${url}.
 
 ＿＿／⬤ㅤㅤ 𝖲𝖤𝖱𝖵𝖤𝖱 ㅤㅤ[橫㦥]
 
 >𝖤𝖭𝖵𝖨𝖠𝖣𝖮 / 𝖤𝖭𝖵𝖨𝖠𝖭𝖣𝖮 / 𝖫𝖫𝖤𝖦𝖠𝖣𝖮<
 
-ㅤㅤ      𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤAdara`
+ㅤㅤ      𝖼𝗋𝖾𝖺𝗍𝗈𝗋ㅤㅤ𔘓ㅤㅤAdara
+`
       if (data.type === 'video') {
         await client.sendMessage(m.chat, { video: { url: data.url }, caption, mimetype: 'video/mp4', fileName: 'ig.mp4' }, { quoted: m })
       } else if (data.type === 'image') {
